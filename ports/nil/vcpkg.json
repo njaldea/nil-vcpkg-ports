@@ -1,12 +1,10 @@
 {
-  "$comment": "nil libraries",
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "nil",
   "version": "0.0.1",
   "description": "nil libraries",
   "homepage": "https://github.com/njaldea",
-  "features": {
-    "gate": {
-      "description": "Node Execution Library"
-    }
-  }
+  "dependencies": [
+    "nil-gate"
+  ]
 }
