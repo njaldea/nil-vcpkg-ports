@@ -1,0 +1,12 @@
+{
+  "$comment": "nil libraries",
+  "name": "nil",
+  "version": "0.0.1",
+  "description": "nil libraries",
+  "homepage": "https://github.com/njaldea",
+  "features": {
+    "gate": {
+      "description": "Node Execution Library"
+    }
+  }
+}
