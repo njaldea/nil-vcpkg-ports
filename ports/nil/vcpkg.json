@@ -4,7 +4,10 @@
   "version": "0.0.1",
   "description": "nil libraries",
   "homepage": "https://github.com/njaldea",
-  "dependencies": [
-    "nil-gate"
-  ]
+  "features": {
+    "gate": {
+      "dependencies": ["nil-gate"],
+      "description": "Node Execution Library"
+    }
+  }
 }
