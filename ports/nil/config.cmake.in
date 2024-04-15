@@ -1,5 +1,3 @@
 if("@ENABLE_FEATURE_GATE@")
-    include(${CMAKE_CURRENT_LIST_DIR}/nil-gate-gate-targets.cmake)
+    include(${CMAKE_CURRENT_LIST_DIR}/../nil-gate/nil-gate-gate-targets.cmake)
 endif()
-
-check_required_components(nil)

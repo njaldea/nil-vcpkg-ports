@@ -35,3 +35,9 @@ write_basic_package_version_file(
 )
 
 vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/LICENSE")
+set(USAGE_FILE ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage)
+file(WRITE  ${USAGE_FILE} "\nnil provides CMake targets:\n\n")
+file(APPEND ${USAGE_FILE} "    find_package(nil CONFIG REQUIRED)\n")
+if(${ENABLE_FEATURE_GATE})
+    file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::gate)\n")
+endif()
