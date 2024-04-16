@@ -57,6 +57,10 @@ find_package(nil-gate CONFIG REQUIRED)
 target_link_libraries(main PRIVATE nil::gate)
 ```
 
+## cmake template
+
+cmake folder contains a template and a package script.
+
 ## To publish a new version
 
 - edit portfile.cmake for the library to publish

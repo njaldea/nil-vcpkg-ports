@@ -22,22 +22,28 @@ if(NOT FEATURE_OPTIONS MATCHES "^.*=ON.*$")
 endif()
 
 configure_package_config_file(
-	${CMAKE_CURRENT_LIST_DIR}/config.cmake.in
-	${CURRENT_PACKAGES_DIR}/share/${PORT}/nil-config.cmake
-	INSTALL_DESTINATION ${CURRENT_PACKAGES_DIR}
-	NO_SET_AND_CHECK_MACRO
+    ${CMAKE_CURRENT_LIST_DIR}/config.cmake.in
+    ${CURRENT_PACKAGES_DIR}/share/${PORT}/nil-config.cmake
+    INSTALL_DESTINATION ${CURRENT_PACKAGES_DIR}
+    NO_SET_AND_CHECK_MACRO
 )
     
 write_basic_package_version_file(
-	${CURRENT_PACKAGES_DIR}/share/${PORT}/nil-config-version.cmake
-	VERSION 0.0.1
-	COMPATIBILITY SameMajorVersion
-)
+    ${CURRENT_PACKAGES_DIR}/share/${PORT}/nil-config-version.cmake
+    VERSION 0.0.1
+    COMPATIBILITY SameMajorVersion
+    )
 
 vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/LICENSE")
 set(USAGE_FILE ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage)
-file(WRITE  ${USAGE_FILE} "\nnil provides CMake targets:\n\n")
-file(APPEND ${USAGE_FILE} "    find_package(nil CONFIG REQUIRED)\n")
+file(WRITE  ${USAGE_FILE} "nil provides CMake targets:\n\n")
+file(APPEND ${USAGE_FILE} "    # depending on nil package via features\n")
+file(APPEND ${USAGE_FILE} "    find_package(nil COMPONENTS [FEATURE...] CONFIG REQUIRED)\n\n")
+file(APPEND ${USAGE_FILE} "    # or depending on individual packages\n")
+file(APPEND ${USAGE_FILE} "    find_package(nil-[FEATURE] CONFIG REQUIRED)\n\n")
+file(APPEND ${USAGE_FILE} "    # link your target\n")
+file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::[FEATURE])\n\n")
+file(APPEND ${USAGE_FILE} "Available Features:\n")
 if(${ENABLE_FEATURE_GATE})
-    file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::gate)\n")
+    file(APPEND ${USAGE_FILE} "    gate\n")
 endif()
