@@ -49,7 +49,7 @@ This repository contains all of nil's libraries for vcpkg distribution.
 - in your cmake files
 ```cmake
 # if you are depending on `nil` with `gate` feature
-find_package(nil CONFIG REQUIRED)
+find_package(nil COMPONENTS gate CONFIG REQUIRED)
 target_link_libraries(main PRIVATE nil::gate)
 
 # if you are directly depending on `nil-gate`
