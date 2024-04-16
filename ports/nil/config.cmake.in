@@ -1,3 +1,26 @@
-if("@ENABLE_FEATURE_GATE@")
-    include(${CMAKE_CURRENT_LIST_DIR}/../nil-gate/nil-gate-gate-targets.cmake)
+if (NOT nil_FIND_COMPONENTS)
+    message(FATAL_ERROR "Requires at least 1 component")
 endif()
+
+set(
+    NIL_FEATURES
+    "gate"
+)
+set(
+    NIL_FEATURE_STATE
+    "@ENABLE_FEATURE_GATE@"
+)
+
+foreach(COMPONENT_NAME ${nil_FIND_COMPONENTS})
+    list(FIND NIL_FEATURES ${COMPONENT_NAME} NIL_INDEX)
+    if(${NIL_INDEX} EQUAL -1)
+        message(FATAL_ERROR "Unknown component: ${COMPONENT_NAME}")
+    else()
+        list(GET NIL_FEATURE_STATE ${NIL_INDEX} IS_ENABLED)
+        if(${IS_ENABLED})
+            include(${CMAKE_CURRENT_LIST_DIR}/../nil-${COMPONENT_NAME}/nil-${COMPONENT_NAME}-${COMPONENT_NAME}-targets.cmake)
+        else()
+            message(WARNING "${COMPONENT_NAME} is not available")
+        endif()
+    endif()
+endforeach()
