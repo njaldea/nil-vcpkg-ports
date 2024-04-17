@@ -25,9 +25,9 @@ install(FILES
 # <root_project>-<target>-targets.cmake will be created
 function(install_for_package TARGET)
     install(DIRECTORY publish/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-    install(TARGETS ${TARGET} EXPORT ${CMAKE_PROJECT_NAME}-${TARGET}-targets)
+    install(TARGETS ${TARGET} EXPORT ${CMAKE_PROJECT_NAME}-targets)
     install(
-        EXPORT ${CMAKE_PROJECT_NAME}-${TARGET}-targets
+        EXPORT ${CMAKE_PROJECT_NAME}-targets
         NAMESPACE ${CMAKE_PROJECT_NAME}::
         DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}
     )
