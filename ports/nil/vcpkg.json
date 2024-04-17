@@ -12,6 +12,10 @@
     "clix": {
       "dependencies": ["nil-clix"],
       "description": "Simplified argument parsing (from boost::program_options)"
+    },
+    "service": {
+      "dependencies": ["nil-service"],
+      "description": "Simplified event handling (from boost::asio)"
     }
   }
 }

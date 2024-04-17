@@ -6,6 +6,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         gate           ENABLE_FEATURE_GATE
         clix           ENABLE_FEATURE_CLIX
+        service        ENABLE_FEATURE_SERVICE
 )
 
 if(NOT FEATURE_OPTIONS MATCHES "^.*=ON.*$")
@@ -16,6 +17,7 @@ if(NOT FEATURE_OPTIONS MATCHES "^.*=ON.*$")
         "\nAvailable features:"
         "\n   -  gate"
         "\n   -  clix"
+        "\n   -  service"
         "\n"
         "\n  ${Red}No feature provided. Terminating...${ColorReset}"
         "\n"
@@ -51,4 +53,7 @@ if(${ENABLE_FEATURE_GATE})
 endif()
 if(${ENABLE_FEATURE_CLIX})
     file(APPEND ${USAGE_FILE} "    clix\n")
+endif()
+if(${ENABLE_FEATURE_SERVICE})
+    file(APPEND ${USAGE_FILE} "    service\n")
 endif()
