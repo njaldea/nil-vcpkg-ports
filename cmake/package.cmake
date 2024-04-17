@@ -20,9 +20,6 @@ install(FILES
     DESTINATION "share/${CMAKE_PROJECT_NAME}"
 )
 
-# standardization in folder structure will be necessary
-# publish folder should contain all headers that needs to be published
-# <root_project>-<target>-targets.cmake will be created
 function(install_for_package TARGET)
     install(DIRECTORY publish/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
     install(TARGETS ${TARGET} EXPORT ${CMAKE_PROJECT_NAME}-targets)

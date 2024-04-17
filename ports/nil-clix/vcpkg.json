@@ -1,9 +1,9 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
-    "name": "nil-gate",
+    "name": "nil-clix",
     "version": "0.0.1",
-    "description": "Node Execution Library",
-    "homepage": "https://github.com/njaldea/nil-gate",
+    "description": "Simplified argument parsing (from boost::program_options)",
+    "homepage": "https://github.com/njaldea/nil-clix",
     "dependencies": [
         {
             "name": "vcpkg-cmake",
@@ -12,10 +12,6 @@
         {
             "name": "vcpkg-cmake-config",
             "host": true
-        },
-        {
-            "name": "boost-program-options",
-            "version>=": "1.82.0"
         }
     ]
 }

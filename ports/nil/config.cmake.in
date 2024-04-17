@@ -5,10 +5,12 @@ endif()
 set(
     NIL_FEATURES
     "gate"
+    "clix"
 )
 set(
     NIL_FEATURE_STATE
     "@ENABLE_FEATURE_GATE@"
+    "@ENABLE_FEATURE_CLIX@"
 )
 
 foreach(COMPONENT_NAME ${nil_FIND_COMPONENTS})

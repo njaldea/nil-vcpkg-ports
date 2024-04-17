@@ -5,6 +5,7 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         gate           ENABLE_FEATURE_GATE
+        clix           ENABLE_FEATURE_CLIX
 )
 
 if(NOT FEATURE_OPTIONS MATCHES "^.*=ON.*$")
@@ -14,6 +15,7 @@ if(NOT FEATURE_OPTIONS MATCHES "^.*=ON.*$")
     message(
         "\nAvailable features:"
         "\n   -  gate"
+        "\n   -  clix"
         "\n"
         "\n  ${Red}No feature provided. Terminating...${ColorReset}"
         "\n"
@@ -46,4 +48,7 @@ file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::[FEATURE
 file(APPEND ${USAGE_FILE} "Available Features:\n")
 if(${ENABLE_FEATURE_GATE})
     file(APPEND ${USAGE_FILE} "    gate\n")
+endif()
+if(${ENABLE_FEATURE_CLIX})
+    file(APPEND ${USAGE_FILE} "    clix\n")
 endif()

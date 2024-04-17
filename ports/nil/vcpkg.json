@@ -8,6 +8,10 @@
     "gate": {
       "dependencies": ["nil-gate"],
       "description": "Node Execution Library"
+    },
+    "clix": {
+      "dependencies": ["nil-clix"],
+      "description": "Simplified argument parsing (from boost::program_options)"
     }
   }
 }
