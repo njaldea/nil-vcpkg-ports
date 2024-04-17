@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if [[ $0 != $BASH_SOURCE ]]; then
+    echo "do not source this script"
+    return 1
+fi
+
+SCRIPT_PATH=`(dirname $BASH_SOURCE)`
+REPO_PATH=`(realpath $SCRIPT_PATH/..)`
+OVERLAY_OPT="--overlay-ports"
+
+eval '${VCPKG_ROOT}/vcpkg remove nil-gate     ${OVERLAY_OPT}=${REPO_PATH}/ports --recurse'
+eval '${VCPKG_ROOT}/vcpkg remove nil-clix     ${OVERLAY_OPT}=${REPO_PATH}/ports --recurse'
+eval '${VCPKG_ROOT}/vcpkg remove nil-service  ${OVERLAY_OPT}=${REPO_PATH}/ports --recurse'
+eval '${VCPKG_ROOT}/vcpkg remove nil          ${OVERLAY_OPT}=${REPO_PATH}/ports --recurse'

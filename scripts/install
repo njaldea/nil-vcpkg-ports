@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if [[ $0 != $BASH_SOURCE ]]; then
+    echo "do not source this script"
+    return 1
+fi
+
+SCRIPT_PATH=`(dirname $BASH_SOURCE)`
+REPO_PATH=`(realpath $SCRIPT_PATH/..)`
+
+${VCPKG_ROOT}/vcpkg                     \
+    install                             \
+    nil[gate,clix,service]              \
+    --overlay-ports=${REPO_PATH}/ports  \
+    --binarysource=clear
