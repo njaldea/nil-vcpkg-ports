@@ -12,10 +12,6 @@
         {
             "name": "vcpkg-cmake-config",
             "host": true
-        },
-        {
-            "name": "boost-program-options",
-            "version>=": "1.82.0"
         }
     ]
 }
