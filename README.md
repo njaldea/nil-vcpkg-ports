@@ -75,3 +75,7 @@ cmake folder contains a template and a package script.
     - `versions/n-/nil-${library_to_publish}.json`
 - commit changes
 - push to remote
+
+## NOTE!!
+
+This registry is still in WIP. versioning is not properly implemented yet.
