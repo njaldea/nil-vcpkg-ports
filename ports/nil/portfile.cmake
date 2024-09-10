@@ -40,7 +40,8 @@ write_basic_package_version_file(
     COMPATIBILITY SameMajorVersion
 )
 
-vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
 set(USAGE_FILE ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage)
 file(WRITE  ${USAGE_FILE} "nil provides CMake targets:\n\n")
 file(APPEND ${USAGE_FILE} "    # depending on nil package via features\n")

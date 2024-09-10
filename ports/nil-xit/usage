@@ -1,0 +1,4 @@
+nil-xit provides CMake targets:
+
+  find_package(nil-xit CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE nil::xit)
