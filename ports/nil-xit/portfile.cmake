@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO njaldea/nil-xit
-    REF bb727b440156e8e37faf7aad21192b8bf1c3a860
-    SHA512 f0edccabeebb31e77dcf7c495b86a7092b5a311cb232509d744790cfb3d7dbb4670979a5d7b16e7e6f371f8cb5acf2932de2efa2c6ea44c21077b9e65e36aa18
+    REF 7910f29fc81e40baff8b8a27f83cd6d1a2d7ec89
+    SHA512 5608f83ffe776581c289156dab4ded28c3f8f7d0facec9af9c0bc02638ff316165028317da4e2b125b64552a505be70eb6cf251c3b186bec8ef67aa288f8b28b
     HEAD_REF master
 )
 
