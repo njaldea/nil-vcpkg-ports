@@ -2,8 +2,8 @@
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
     "name": "nil-service",
     "version": "0.0.1",
-    "description": "Node Execution Library",
-    "homepage": "https://github.com/njaldea/nil-gate",
+    "description": "Networking Library wrapper for Boost asio/beast",
+    "homepage": "https://github.com/njaldea/nil-service",
     "dependencies": [
         {
             "name": "vcpkg-cmake",
