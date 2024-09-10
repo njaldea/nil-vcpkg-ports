@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO njaldea/nil-gate
-    REF dd2f9129af399d9360a092d5185cbbf679d37da5
-    SHA512 6eba94fc29e2fedcf17fafdaef4e78a35918debc726c81e6160c9495f1b24d69cbe685fc47fc5b23bdd8cc1f92ad4b2a3feb6187d2fbe52b0efa051aabd1e7e4
+    REF ed2ef6a0caedf38c1c4ec33d1317e13d2892f5dc
+    SHA512 d68cb24b173a5e81823988c0d33da7458f84fee2ec4120bb0df4b66a66bd0b8c9d53506993192281fc85027a434fbfd9ba2b00df303bbbce81fc7939a5ce608e
     HEAD_REF master
 )
 
