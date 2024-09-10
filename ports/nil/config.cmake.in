@@ -7,12 +7,14 @@ set(
     "gate"
     "clix"
     "service"
+    "xit"
 )
 set(
     NIL_FEATURE_STATE
     "@ENABLE_FEATURE_GATE@"
     "@ENABLE_FEATURE_CLIX@"
     "@ENABLE_FEATURE_SERVICE@"
+    "@ENABLE_FEATURE_XIT@"
 )
 
 foreach(COMPONENT_NAME ${nil_FIND_COMPONENTS})

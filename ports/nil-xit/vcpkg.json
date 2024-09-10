@@ -1,9 +1,9 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
-    "name": "nil-service",
+    "name": "nil-xit",
     "version": "0.0.1",
-    "description": "Simplified event handling (from boost::asio)",
-    "homepage": "https://github.com/njaldea/nil-service",
+    "description": "C++ API for Svelte UI",
+    "homepage": "https://github.com/njaldea/nil-xit",
     "dependencies": [
         {
             "name": "vcpkg-cmake",
@@ -14,12 +14,11 @@
             "host": true
         },
         {
-            "name": "boost-asio",
-            "version>=": "1.82.0"
+            "name": "nil-service"
         },
         {
-            "name": "boost-beast",
-            "version>=": "1.82.0"
+            "name": "protobuf",
+            "version>=": "3.21.12"
         }
     ]
 }

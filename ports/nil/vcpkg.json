@@ -16,6 +16,10 @@
     "service": {
       "dependencies": ["nil-service"],
       "description": "Simplified event handling (from boost::asio)"
+    },
+    "xit": {
+      "dependencies": ["nil-xit"],
+      "description": "C++ API for Svelte UI"
     }
   }
 }
