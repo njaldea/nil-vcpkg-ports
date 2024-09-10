@@ -19,6 +19,7 @@ if(NOT FEATURE_OPTIONS MATCHES "^.*=ON.*$")
         "\n   -  gate"
         "\n   -  clix"
         "\n   -  service"
+        "\n   -  xit"
         "\n"
         "\n  ${Red}No feature provided. Terminating...${ColorReset}"
         "\n"
@@ -37,7 +38,7 @@ write_basic_package_version_file(
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/nil-config-version.cmake
     VERSION 0.0.1
     COMPATIBILITY SameMajorVersion
-    )
+)
 
 vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/LICENSE")
 set(USAGE_FILE ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage)
