@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO njaldea/nil-clix
-    REF 13339ea61cb8e80b3e6f36bdc47d7ff6485b08a7
-    SHA512 d05c168f5f2fd52f3acf7a050faaf3141ee7cc92dc00459df19a3e37d5c0c803d3df4f178599ac38abd9d0cf2e2ff3b4af54ffc837166daddeab0596f7b264bc
+    REF 0cc5b20e864eead2fcb9dc6be460aa0a94244c43
+    SHA512 e0798e66ad99b00b61a6e81908daf35a03c6b7a1bdbe8db0adc1f710273c70c7174c3f94d9bd5116133c46ad7486eec086cca651098a35e436888eaa776421a1
     HEAD_REF master
 )
 

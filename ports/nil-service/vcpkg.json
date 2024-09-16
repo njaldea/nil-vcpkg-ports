@@ -15,11 +15,11 @@
         },
         {
             "name": "boost-asio",
-            "version>=": "1.82.0"
+            "version>=": "1.85.0"
         },
         {
             "name": "boost-beast",
-            "version>=": "1.82.0"
+            "version>=": "1.85.0"
         }
     ]
 }
