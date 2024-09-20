@@ -10,6 +10,5 @@ REPO_PATH=`(realpath $SCRIPT_PATH/..)`
 
 ${VCPKG_ROOT}/vcpkg                     \
     install                             \
-    nil[gate,clix,service,xit]          \
     --overlay-ports=${REPO_PATH}/ports  \
     --binarysource=clear

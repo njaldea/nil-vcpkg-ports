@@ -3,23 +3,21 @@ This repository contains all of nil's libraries for vcpkg distribution.
 ## To include in your repository
 
 - setup `vcpkg`
-- make sure to add this repository to vcpkg-config.json
+- make sure to add this repository to vcpkg-configuration.json
 
 ```json
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg-configuration.schema.json",
-    "default-registry": null,
+    "default-registry": {
+        "kind": "git",
+        "repository": "https://github.com/Microsoft/vcpkg",
+        "baseline": "3508985146f1b1d248c67ead13f8f54be5b4f5da"
+    },
     "registries": [
         {
             "kind": "git",
-            "repository": "https://github.com/Microsoft/vcpkg",
-            "baseline": "da21e45c9ae689f63aa27f3a4ee0e64fe6b16494",
-            "packages": ["*"]
-        }, 
-        {
-            "kind": "git",
             "repository": "https://github.com/njaldea/nil-vcpkg-ports",
-            "baseline": "25ca98d3bb1d27131cb1932ef1af426569255ec5",
+            "baseline": "f2397a5d90f47dc494ceb60f88086343e269e18d",
             "packages": ["nil*"]
         }
     ]
@@ -47,6 +45,7 @@ This repository contains all of nil's libraries for vcpkg distribution.
 ```
 
 - in your cmake files
+
 ```cmake
 # if you are depending on `nil` with `gate` feature
 find_package(nil COMPONENTS gate CONFIG REQUIRED)
