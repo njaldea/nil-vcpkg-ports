@@ -5,6 +5,10 @@
         {
             "name": "nil",
             "features": ["clix", "service", "xit", "gate"]
-        }
+        },
+        "nil-clix",
+        "nil-service",
+        "nil-gate",
+        "nil-xit"
     ]
 }
