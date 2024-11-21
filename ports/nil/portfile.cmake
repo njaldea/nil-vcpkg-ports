@@ -8,6 +8,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         clix           ENABLE_FEATURE_CLIX
         service        ENABLE_FEATURE_SERVICE
         xit            ENABLE_FEATURE_XIT
+        xit-test       ENABLE_FEATURE_XIT_TEST
 )
 
 if(NOT FEATURE_OPTIONS MATCHES "^.*=ON.*$")
@@ -20,6 +21,7 @@ if(NOT FEATURE_OPTIONS MATCHES "^.*=ON.*$")
         "\n   -  clix"
         "\n   -  service"
         "\n   -  xit"
+        "\n   -  xit-test"
         "\n"
         "\n  ${Red}No feature provided. Terminating...${ColorReset}"
         "\n"
@@ -62,4 +64,7 @@ if(${ENABLE_FEATURE_SERVICE})
 endif()
 if(${ENABLE_FEATURE_XIT})
     file(APPEND ${USAGE_FILE} "    xit\n")
+endif()
+if(${ENABLE_FEATURE_XIT_TEST})
+    file(APPEND ${USAGE_FILE} "    xit-test\n")
 endif()

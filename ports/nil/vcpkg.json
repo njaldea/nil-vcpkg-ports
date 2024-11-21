@@ -20,6 +20,12 @@
     "xit": {
       "dependencies": ["nil-xit"],
       "description": "C++ API for Svelte UI"
+    },
+    "xit-test": {
+      "dependencies": [
+        { "name": "nil-xit-test", "features": ["gtest"] }
+      ],
+      "description": "C++ API for Svelte UI"
     }
   }
 }

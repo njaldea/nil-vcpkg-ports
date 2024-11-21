@@ -1,0 +1,25 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+    "name": "nil-xit-test",
+    "version": "0.0.1",
+    "description": "C++ API for Svelte UI",
+    "homepage": "https://github.com/njaldea/nil-xit",
+    "features": {
+        "gtest": {
+            "description": "nil-xit-gtest adapter",
+            "dependencies": ["gtest", "nil-clix"]
+        }
+    },
+    "dependencies": [
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        },
+        {
+            "name": "vcpkg-cmake-config",
+            "host": true
+        },
+        "nil-xit",
+        "nil-gate"
+    ]
+}

@@ -8,6 +8,7 @@ set(
     "clix"
     "service"
     "xit"
+    "xit-test"
 )
 set(
     NIL_FEATURE_STATE
@@ -15,6 +16,7 @@ set(
     "@ENABLE_FEATURE_CLIX@"
     "@ENABLE_FEATURE_SERVICE@"
     "@ENABLE_FEATURE_XIT@"
+    "@ENABLE_FEATURE_XIT_TEST@"
 )
 
 foreach(COMPONENT_NAME ${nil_FIND_COMPONENTS})
