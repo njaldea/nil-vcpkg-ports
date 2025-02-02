@@ -1,7 +1,7 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
     "name": "nil-xit",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "C++ API for Svelte UI",
     "homepage": "https://github.com/njaldea/nil-xit",
     "dependencies": [
@@ -13,12 +13,7 @@
             "name": "vcpkg-cmake-config",
             "host": true
         },
-        {
-            "name": "nil-service"
-        },
-        {
-            "name": "protobuf",
-            "version>=": "3.21.12"
-        }
+        "nil-service",
+        "flatbuffers"
     ]
 }
