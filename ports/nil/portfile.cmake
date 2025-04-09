@@ -7,6 +7,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gate           ENABLE_FEATURE_GATE
         clix           ENABLE_FEATURE_CLIX
         service        ENABLE_FEATURE_SERVICE
+        xalt           ENABLE_FEATURE_XALT
         xit            ENABLE_FEATURE_XIT
         xit-test       ENABLE_FEATURE_XIT_TEST
 )
@@ -20,6 +21,7 @@ if(NOT FEATURE_OPTIONS MATCHES "^.*=ON.*$")
         "\n   -  gate"
         "\n   -  clix"
         "\n   -  service"
+        "\n   -  xalt"
         "\n   -  xit"
         "\n   -  xit-test"
         "\n"
@@ -61,6 +63,9 @@ if(${ENABLE_FEATURE_CLIX})
 endif()
 if(${ENABLE_FEATURE_SERVICE})
     file(APPEND ${USAGE_FILE} "    service\n")
+endif()
+if(${ENABLE_FEATURE_XALT})
+    file(APPEND ${USAGE_FILE} "    xalt\n")
 endif()
 if(${ENABLE_FEATURE_XIT})
     file(APPEND ${USAGE_FILE} "    xit\n")

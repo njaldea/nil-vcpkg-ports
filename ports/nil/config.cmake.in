@@ -7,6 +7,7 @@ set(
     "gate"
     "clix"
     "service"
+    "xalt"
     "xit"
     "xit-test"
 )
@@ -16,6 +17,7 @@ set(
     "@ENABLE_FEATURE_GATE@"
     "@ENABLE_FEATURE_CLIX@"
     "@ENABLE_FEATURE_SERVICE@"
+    "@ENABLE_FEATURE_XALT@"
     "@ENABLE_FEATURE_XIT@"
     "@ENABLE_FEATURE_XIT_TEST@"
 )

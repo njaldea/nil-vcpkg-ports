@@ -4,11 +4,12 @@
     "dependencies": [
         {
             "name": "nil",
-            "features": ["clix", "service", "gate", "xit", "xit-test"]
+            "features": ["clix", "service", "gate", "xalt", "xit", "xit-test"]
         },
         "nil-clix",
         "nil-service",
         "nil-gate",
+        "nil-xalt",
         "nil-xit",
         {
             "name": "nil-xit-test",

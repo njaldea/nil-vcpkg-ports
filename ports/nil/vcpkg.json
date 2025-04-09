@@ -17,6 +17,10 @@
       "dependencies": ["nil-service"],
       "description": "Simplified event handling (from boost::asio)"
     },
+    "xalt": {
+      "dependencies": ["nil-xalt"],
+      "description": "Utility library dump"
+    },
     "xit": {
       "dependencies": ["nil-xit"],
       "description": "C++ API for Svelte UI"
