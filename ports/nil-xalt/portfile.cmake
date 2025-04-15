@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO njaldea/nil-xalt
-    REF a5f7e36af585374c5009453714759a4142b9b279
-    SHA512 75c0afe3a46a3eeea3ba267297fe565b8a3c06e1f298c62dab2f8d9315dbffd98e34f0198d51f24ab4c2a523a77f6d36d8c089cde85afffab500fdc92e8cb445
+    REF f6c958b4551b5f40dfde5fa3ba6e1a6092fcc779
+    SHA512 dc38245ce0cb5d4b6bc2404456d878af87fbbf4800d805b10c2aee0261ff3bb7047fe23723dbf6ff7bbf1dff9ead83e8d3066372d9aa6e8aee1bcb3194d8ddcc
     HEAD_REF master
 )
 
