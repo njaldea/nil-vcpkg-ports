@@ -20,6 +20,7 @@
         {
             "name": "boost-beast",
             "version>=": "1.85.0"
-        }
+        },
+        "nil-xalt"
     ]
 }
