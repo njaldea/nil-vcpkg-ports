@@ -22,5 +22,11 @@
             "version>=": "1.85.0"
         },
         "nil-xalt"
-    ]
+    ],
+    "features": {
+        "ssl": {
+            "description": "https and wss",
+            "dependencies": [ "openssl" ]
+        }
+    }
 }

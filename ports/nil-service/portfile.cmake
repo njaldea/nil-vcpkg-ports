@@ -1,14 +1,30 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO njaldea/nil-service
-    REF 2a2bbffdc82fd91f3b0397c4a54f8aa0a7e3c317
-    SHA512 d2504e38065af8a8982b58d9fee276a640d2513f6fae6ca8b577a217b2329ab42f6300733234df5dc05002eb37a5c32c26d2b117f2f736fc86994140d1c49891
+    REF fe59c934b6f4cd75f9c9edd3a3567940fc53e328
+    SHA512 c3c8f57c9e8fc9031dc6d9ff5d768dc9e860917a8b75160585420ad2b909e614bd6f205bd76d656af60b1be22a483babfd84c4ea8c15821fa2b80fd2cbfdbe06
     HEAD_REF master
 )
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        ssl          ENABLE_SSL
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+set(USAGE_FILE ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage)
+file(WRITE  ${USAGE_FILE} "nil-service provides CMake targets:\n\n")
+file(APPEND ${USAGE_FILE} "    find_package(nil-service CONFIG REQUIRED)\n")
+file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::service)\n\n")
+file(APPEND ${USAGE_FILE} "    # for nil::service_ssl\n")
+file(APPEND ${USAGE_FILE} "    find_package(nil-service CONFIG REQUIRED COMPONENTS ssl)\n")
+file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::service_ssl)\n\n")
