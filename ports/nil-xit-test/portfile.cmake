@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO njaldea/nil-xit-test
-    REF v1.0.0
-    SHA512 3fbf775658c0880272ffcf6c85ae2847cc24fa4c6b4b7203686183f52e3863c4bd4292fc177308df492b211170b12d3ab9795ca8dac368095d5a2d1a02757925
+    REF c1e0654f7c9b6271af7c898b1833da3958eedb22
+    SHA512 4b2dab93ec585d3882dd10f6f4e415575ac31834e4e5181a9c71509e1a8cbc74d6cc3247902835d5bd015f9f248d977199644a1f8e7dc4e968ccd09b9c878444
     HEAD_REF master
 )
 
@@ -26,5 +26,13 @@ file(WRITE  ${USAGE_FILE} "nil-xit-test provides CMake targets:\n\n")
 file(APPEND ${USAGE_FILE} "    find_package(nil-xit-test CONFIG REQUIRED)\n")
 file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::xit-test)\n\n")
 file(APPEND ${USAGE_FILE} "    # for nil::xit-gtest\n")
-file(APPEND ${USAGE_FILE} "    find_package(nil-xit-test CONFIG REQUIRED COMPONENTS gtest)\n")
+file(APPEND ${USAGE_FILE} "    find_package(nil-xit-test CONFIG REQUIRED COMPONENTS gtest)\n\n")
+file(APPEND ${USAGE_FILE} "    # register a test\n")
+file(APPEND ${USAGE_FILE} "    add_xit_test(\n")
+file(APPEND ${USAGE_FILE} "        TARGET\n")
+file(APPEND ${USAGE_FILE} "        SOURCES\n")
+file(APPEND ${USAGE_FILE} "            <your files...>\n")
+file(APPEND ${USAGE_FILE} "        GROUPS\n")
+file(APPEND ${USAGE_FILE} "            <key=value...>\n")
+file(APPEND ${USAGE_FILE} "    )\n")
 file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::xit-gtest)\n\n")
