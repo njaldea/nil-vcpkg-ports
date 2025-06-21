@@ -1,7 +1,7 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
     "name": "nil-xit",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "C++ API for Svelte UI",
     "homepage": "https://github.com/njaldea/nil-xit",
     "dependencies": [
