@@ -7,8 +7,14 @@
             "features": ["clix", "service", "gate", "xalt", "xit", "xit-test"]
         },
         "nil-clix",
-        "nil-service",
-        "nil-gate",
+        {
+            "name": "nil-service",
+            "features": ["ssl"]
+        },
+        {
+            "name": "nil-gate",
+            "features": ["c-api"]
+        },
         "nil-xalt",
         "nil-xit",
         {
