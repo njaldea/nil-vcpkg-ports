@@ -1,8 +1,8 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
     "name": "nil-gate",
-    "version": "1.5.2",
-    "description": "Node Execution Library",
+    "version": "1.5.3",
+    "description": "Tiny, header‑only, change‑driven DAG library (C++20) with C-API",
     "homepage": "https://github.com/njaldea/nil-gate",
     "dependencies": [
         {

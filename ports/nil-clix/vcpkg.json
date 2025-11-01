@@ -1,8 +1,8 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
     "name": "nil-clix",
-    "version": "1.0.0",
-    "description": "Simplified argument parsing (from boost::program_options)",
+    "version": "1.0.1",
+    "description": "Opinionated argument parser",
     "homepage": "https://github.com/njaldea/nil-clix",
     "dependencies": [
         {
@@ -13,9 +13,6 @@
             "name": "vcpkg-cmake-config",
             "host": true
         },
-        {
-            "name": "boost-program-options",
-            "version>=": "1.85.0"
-        }
+        "cli11"
     ]
 }
