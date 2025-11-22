@@ -11,11 +11,11 @@
             "name": "nil-service",
             "features": ["ssl"]
         },
+        "nil-xalt",
         {
             "name": "nil-gate",
             "features": ["c-api"]
         },
-        "nil-xalt",
         "nil-xit",
         {
             "name": "nil-xit-test",

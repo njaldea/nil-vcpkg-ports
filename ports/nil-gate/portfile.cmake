@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO njaldea/nil-gate
-    REF v1.5.3
-    SHA512 788f1f2d70979e923d2897780adb09b6309d1c27bc5d8437a28c04dda8ea07fb04e5410aa6ac5cd96b808297338bae0d239ce9b3c3fcd8cad1d925887928abd5
+    REPO "njaldea/${PORT}"
+    REF "v${VERSION}"
+    SHA512 1f5bd0650e145df8caa545bca5456b90ecb6e4e9b2ca4efd8fbdfadefcd6c57d9b4f2a404190ce2ed94f1d73f8faf6ad07df9ec389ba589a1f8f2578533e4284
     HEAD_REF master
 )
 
@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/${PORT}-${VERSION}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

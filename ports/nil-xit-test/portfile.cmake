@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO njaldea/nil-xit-test
-    REF v0.0.11
-    SHA512 5570aae4aaff377ed1084c2e0721e47f37c2f3941ea7d6f51000c4ea5054dad1838f781c49c6f3b768c562c0164d33a94b912714ed87adbdb5fc2d733ac82c72
+    REPO "njaldea/${PORT}"
+    REF "v${VERSION}"
+    SHA512 43b763603fc22f620af87cc33ace2d7a2dd57e686479f02858d437270d2586ef41be9797497afcc878b89e01eb4b0d3397991b4bae3fe7ac15013c11e668f701
     HEAD_REF master
 )
 
@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/${PORT}-${VERSION}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

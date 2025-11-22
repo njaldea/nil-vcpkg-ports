@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO njaldea/nil-clix
-    REF v1.0.1
-    SHA512 1451d49b5ecd0c91e5c34f6a71804a7bb82ec8640cf95b3f953b4bbebce28a327b42f07511eec4110da9964d3ebbe47098fd2d05bb13a53cc7388c334a06ae92
+    REPO "njaldea/${PORT}"
+    REF "v${VERSION}"
+    SHA512 a10959009016a81033c40ee345872cc2c912e97d18b694fcef0ee30f5e205ee248a8fbdb118a297b336bd2d1f9fea87ffb0a6927e7847cbecc8df6b833fb67b3
     HEAD_REF master
 )
-
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/${PORT}-${VERSION}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
