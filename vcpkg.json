@@ -17,6 +17,7 @@
             "features": ["c-api"]
         },
         "nil-xit",
+        "nil-cmake",
         {
             "name": "nil-xit-test",
             "features": ["gtest"]
