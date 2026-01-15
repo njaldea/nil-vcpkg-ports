@@ -1,7 +1,7 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
     "name": "nil-gate",
-    "version": "1.5.4",
+    "version": "1.6.1",
     "description": "Tiny, header‑only, change‑driven DAG library (C++20) with C-API",
     "homepage": "https://github.com/njaldea/nil-gate",
     "dependencies": [
@@ -13,12 +13,12 @@
             "name": "vcpkg-cmake-config",
             "host": true
         },
+        "nil-cmake",
         "nil-xalt"
     ],
     "features": {
         "c-api": {
-            "description": "Enable c api",
-            "dependencies": []
+            "description": "Enable c api"
         }
     }
 }
