@@ -1,32 +1,32 @@
 {
-    "default": {
-        "nil-cmake": {
-            "baseline": "0.0.2",
-            "port-version": 0
-        },
-        "nil-xalt": {
-          "baseline": "1.4.1",
-          "port-version": 0
-        },
-        "nil-clix": {
-            "baseline": "1.0.5",
-            "port-version": 0
-        },
-        "nil-gate": {
-            "baseline": "1.6.1",
-            "port-version": 0
-        },
-        "nil-service": {
-            "baseline": "1.0.6",
-            "port-version": 0
-        },
-        "nil-xit": {
-            "baseline": "0.3.6",
-            "port-version": 0
-        },
-        "nil-xit-test": {
-            "baseline": "0.0.13",
-            "port-version": 0
-        }
+  "default": {
+    "nil-cmake": {
+      "baseline": "0.0.2",
+      "port-version": 0
+    },
+    "nil-xalt": {
+      "baseline": "1.4.1",
+      "port-version": 0
+    },
+    "nil-clix": {
+      "baseline": "1.0.5",
+      "port-version": 0
+    },
+    "nil-gate": {
+      "baseline": "1.6.1",
+      "port-version": 0
+    },
+    "nil-service": {
+      "baseline": "1.0.7",
+      "port-version": 0
+    },
+    "nil-xit": {
+      "baseline": "0.3.6",
+      "port-version": 0
+    },
+    "nil-xit-test": {
+      "baseline": "0.0.13",
+      "port-version": 0
     }
+  }
 }

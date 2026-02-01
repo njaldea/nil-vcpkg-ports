@@ -1,40 +1,40 @@
 {
-    "versions": [
-        {
-            "version": "1.0.0",
-            "git-tree": "8bd970905efc0f27ded3b640aa74a759f51b5cd0"
-        },
-        {
-            "version": "1.1.0",
-            "git-tree": "3c439da49e8db4d6609927e63092772c9f303094"
-        },
-        {
-            "version": "1.2.0",
-            "git-tree": "8e240d25a48c5e8feb1d19a24cfddbed2a760dcc"
-        },
-        {
-            "version": "1.3.0",
-            "git-tree": "241bf85620241df3ccf3d84565a0391b8f88a03d"
-        },
-        {
-            "version": "1.4.0",
-            "git-tree": "189c237f01cf86eb8d7c793928376265b4432f6a"
-        },
-        {
-            "version": "1.5.2",
-            "git-tree": "29f59b1b3c67fcd47bf15d4fe5b00f51cb990b6a"
-        },
-        {
-            "version": "1.5.3",
-            "git-tree": "1fd49e652d445f816740f0e5b79f29d7d976cbc2"
-        },
-        {
-            "version": "1.5.4",
-            "git-tree": "cbc41fb314db8879ed6b040fb9becf9cd20fc35f"
-        },
-        {
-            "version": "1.6.1",
-            "git-tree": "024261e47dfbe82c11a5470411084a22e5f4292f"
-        }
-    ]
+  "versions": [
+    {
+      "version": "1.0.0",
+      "git-tree": "8bd970905efc0f27ded3b640aa74a759f51b5cd0"
+    },
+    {
+      "version": "1.1.0",
+      "git-tree": "3c439da49e8db4d6609927e63092772c9f303094"
+    },
+    {
+      "version": "1.2.0",
+      "git-tree": "8e240d25a48c5e8feb1d19a24cfddbed2a760dcc"
+    },
+    {
+      "version": "1.3.0",
+      "git-tree": "241bf85620241df3ccf3d84565a0391b8f88a03d"
+    },
+    {
+      "version": "1.4.0",
+      "git-tree": "189c237f01cf86eb8d7c793928376265b4432f6a"
+    },
+    {
+      "version": "1.5.2",
+      "git-tree": "29f59b1b3c67fcd47bf15d4fe5b00f51cb990b6a"
+    },
+    {
+      "version": "1.5.3",
+      "git-tree": "1fd49e652d445f816740f0e5b79f29d7d976cbc2"
+    },
+    {
+      "version": "1.5.4",
+      "git-tree": "cbc41fb314db8879ed6b040fb9becf9cd20fc35f"
+    },
+    {
+      "version": "1.6.1",
+      "git-tree": "024261e47dfbe82c11a5470411084a22e5f4292f"
+    }
+  ]
 }
