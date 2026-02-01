@@ -36,7 +36,7 @@ update_baseline() {
 for dir in ${REPO_PATH}/ports/*; do
   port_name="$(basename "$dir")"
   port_version="$(jq -r '.version' "$dir/vcpkg.json")"
-  port_rev_parse="$(git rev-parse HEAD:../ports/$port_name)"
+  port_rev_parse="$(git -C $REPO_PATH rev-parse HEAD:ports/$port_name)"
   
   version_file="${REPO_PATH}/versions/n-/${port_name}.json"
 
