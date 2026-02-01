@@ -3,7 +3,7 @@
     "name": "nil-cmake",
     "version": "0.0.2",
     "description": "common tooling for nil project cxx setup",
-    "homepage": "https://github.com/njaldea/nil-xit",
+    "homepage": "https://github.com/njaldea/nil-cmake",
     "dependencies": [
         {
             "name": "vcpkg-cmake",

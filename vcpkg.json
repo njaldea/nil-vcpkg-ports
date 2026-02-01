@@ -7,6 +7,10 @@
         "nil-clix",
         "nil-gate",
         "nil-service",
-        "nil-xit"
+        "nil-xit",
+        { 
+            "name": "nil-xit-test",
+            "features": ["gtest"]
+        }
     ]
 }

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "njaldea/${PORT}"
     REF "v${VERSION}"
-    SHA512 2e20510b2b24387b31365818c789240cf0b1e7e0c2b9ed6da121202b0a63ab9708e4207a87b88d10922b8e7c6e5d96c99b7712f60f4c32da617832c788dd2e8e
+    SHA512 fa40ae2272afa1dc505fec7ab036c8ffdbacc4876b0a6809722e4d3cf7a53be2488951c4621742d162397391754699b3183a8b9edf384a4d20e21dc05f2d5b53
     HEAD_REF master
 )
 
@@ -16,8 +16,8 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "share/${PORT}-${VERSION}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${CURRENT_PACKAGES_DIR}/share/doc/${PORT}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

@@ -1,7 +1,7 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
     "name": "nil-service",
-    "version": "1.0.7",
+    "version": "1.0.9",
     "description": "Simplified event handling (from boost::asio)",
     "homepage": "https://github.com/njaldea/nil-service",
     "dependencies": [
