@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+set -x
+
+: "${VCPKG_ROOT:?VCPKG_ROOT is not set}"
+
+rm -rf "$VCPKG_ROOT/buildtrees/"
+rm -rf "$VCPKG_ROOT/packages/"
+rm -rf "$VCPKG_ROOT/downloads/"
+rm -rf "$VCPKG_ROOT/installed/"
+rm -rf vcpkg_installed
+rm -rf ~/.cache/vcpkg/
+# sudo find ~ -type f -exec touch {} +
+$VCPKG_ROOT/bootstrap-vcpkg.sh

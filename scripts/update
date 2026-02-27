@@ -37,6 +37,11 @@ for dir in ${REPO_PATH}/ports/*; do
   port_name="$(basename "$dir")"
   port_version="$(jq -r '.version' "$dir/vcpkg.json")"
   port_rev_parse="$(git -C $REPO_PATH rev-parse HEAD:ports/$port_name)"
+
+  # move to a separate script fn, update_portfile
+  # and run update portfile first, commit, then run update_baseline
+  port_homepage="$(jq -r '.homepage' "$dir/vcpkg.json")"
+  curl -LsS "${port_homepage}/archive/v${port_version}.tar.gz" | sha512sum
   
   version_file="${REPO_PATH}/versions/n-/${port_name}.json"
 
