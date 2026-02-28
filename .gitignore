@@ -1,1 +1,3 @@
 vcpkg_installed
+scripts/.commit.msg
+scripts/.tmp.json

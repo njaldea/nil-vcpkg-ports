@@ -8,6 +8,7 @@ fi
 SCRIPT_PATH=`(dirname $BASH_SOURCE)`
 REPO_PATH=`(realpath $SCRIPT_PATH/..)`
 
+PORT_COMMIT_MSG="${SCRIPT_PATH}/.commit.msg"
 BASELINE_FILE="${REPO_PATH}/versions/baseline.json"
 FORCE_UPDATE=0
 
@@ -21,6 +22,40 @@ while getopts ":f" option; do
     esac
 done
 
+if [[ $HAS_UPDATE == 0 ]]; then
+  echo "use -p for port or -b for baseline"
+  exit 1
+fi
+
+update_ports() {
+  local port_name="$1"
+  local port_version="$2"
+
+  baseline_version="$(jq --arg name "$port_name" '.default[$name].baseline' $BASELINE_FILE)"
+  if [[ $FORCE_UPDATE == 0 && "$port_version" == "${baseline_version:1:-1}" ]]; then
+    return
+  fi
+
+  echo "updating port version: ${port_name} v${port_version}"
+
+  port_homepage="$(jq -r '.homepage' "ports/$port_name/vcpkg.json")"
+  port_hash="$(curl -LsS "${port_homepage}/archive/v${port_version}.tar.gz" | sha512sum | awk '{print $1}')"
+
+  echo -n "vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO \"njaldea/\${PORT}\"
+    REF \"v\${VERSION}\"
+    SHA512 ${port_hash}
+    HEAD_REF master
+)
+
+include(\${CMAKE_CURRENT_LIST_DIR}/port.cmake)" > "ports/${port_name}/portfile.cmake"
+
+  if [[ "$port_version" != "${baseline_version:1:-1}" ]]; then
+    echo "[${port_name}]: v${port_version}" >> "${PORT_COMMIT_MSG}"
+  fi
+}
+
 update_baseline() {
   local port_name="$1"
   local port_version="$2"
@@ -30,19 +65,15 @@ update_baseline() {
     --arg ver "$port_version"                                                  \
     --argjson pv 0                                                             \
     '.default[$name].baseline = $ver | .default[$name]["port-version"] = $pv'  \
-    "$BASELINE_FILE" > .tmp.json && mv .tmp.json "$BASELINE_FILE"
+    "$BASELINE_FILE" > ${SCRIPT_PATH}/.tmp.json &&                             \
+    mv ${SCRIPT_PATH}/.tmp.json "$BASELINE_FILE"
 }
 
-for dir in ${REPO_PATH}/ports/*; do
-  port_name="$(basename "$dir")"
-  port_version="$(jq -r '.version' "$dir/vcpkg.json")"
-  port_rev_parse="$(git -C $REPO_PATH rev-parse HEAD:ports/$port_name)"
+update_baselines() {
+  local port_name="$1"
+  local port_version="$2"
 
-  # move to a separate script fn, update_portfile
-  # and run update portfile first, commit, then run update_baseline
-  port_homepage="$(jq -r '.homepage' "$dir/vcpkg.json")"
-  curl -LsS "${port_homepage}/archive/v${port_version}.tar.gz" | sha512sum
-  
+  port_rev_parse="$(git -C $REPO_PATH rev-parse HEAD:ports/$port_name)"
   version_file="${REPO_PATH}/versions/n-/${port_name}.json"
 
   index=$(jq -r --arg ver "$port_version"                                           \
@@ -51,7 +82,7 @@ for dir in ${REPO_PATH}/ports/*; do
 
   if [[ $index != -1 ]]; then
     if [[ $FORCE_UPDATE == 1 ]]; then
-      echo "${port_name}: updating"
+      echo "${port_name}: updating version"
       jq                                                                      \
         --argjson index $index                                                \
         --arg ver "$port_version"                                             \
@@ -61,7 +92,7 @@ for dir in ${REPO_PATH}/ports/*; do
       update_baseline "$port_name" "$port_version"
     fi
   else
-    echo "${port_name}: appending"
+    echo "${port_name}: appending version"
 
     jq                                                                          \
       --arg ver "$port_version"                                                 \
@@ -70,4 +101,45 @@ for dir in ${REPO_PATH}/ports/*; do
        "$version_file" > .tmp.json && mv .tmp.json "$version_file"
     update_baseline "$port_name" "$port_version"
   fi
-done
+}
+
+read -r -p "Do you want to update ports? [y/N] " PORT_UPDATE
+PORT_UPDATE=${PORT_UPDATE,,}
+
+if [[ $PORT_UPDATE == "y" ]]; then
+  echo -n "" > "${PORT_COMMIT_MSG}"
+  for dir in ${REPO_PATH}/ports/*; do
+    port_name="$(basename "$dir")"
+    port_version="$(jq -r '.version' "$dir/vcpkg.json")"
+
+    update_ports $port_name $port_version
+  done
+fi
+
+read -r -p "Do you want to commit port changes? [y/N] " PORT_COMMIT
+PORT_COMMIT=${PORT_COMMIT,,}
+
+if [[ $PORT_COMMIT == "y" ]]; then
+  git add .
+  git commit -F "${PORT_COMMIT_MSG}"
+fi
+
+read -r -p "Do you want to update baselines? [y/N] " BASELINE_UPDATE
+BASELINE_UPDATE=${BASELINE_UPDATE,,}
+
+if [[ $BASELINE_UPDATE == "y" ]]; then
+  for dir in ${REPO_PATH}/ports/*; do
+    port_name="$(basename "$dir")"
+    port_version="$(jq -r '.version' "$dir/vcpkg.json")"
+
+    update_baselines $port_name $port_version
+  done
+fi
+
+read -r -p "Do you want to commit baseline changes? [y/N] " BASELINE_COMMIT
+BASELINE_COMMIT=${BASELINE_COMMIT,,}
+
+if [[ $BASELINE_COMMIT == "y" ]]; then
+  git add .
+  git commit -m "update versions"
+fi
