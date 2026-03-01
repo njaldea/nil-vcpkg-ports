@@ -7,3 +7,4 @@ vcpkg_from_github(
 )
 
 include(${CMAKE_CURRENT_LIST_DIR}/port.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../cpack.cmake)

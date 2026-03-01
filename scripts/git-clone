@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# apt install fzf
+
+TOKEN_FILE="$HOME/.nil/git-token"
+
+repos=$(curl -s -H "Authorization: token $(< "$TOKEN_FILE")" \
+          "https://api.github.com/user/repos?per_page=100" \
+          | jq -r '.[] | "\(.name)\t\(.ssh_url)"')
+
+if [[ -z "$repos" ]]; then
+    echo "No repositories found."
+    exit 1
+fi
+
+# Use fzf to select a repo interactively
+# fzf allows moving with arrow keys and typing to filter
+selected=$(echo "$repos" | fzf --header="Select a repository to clone" --ansi)
+
+# If user cancelled
+[[ -z "$selected" ]] && echo "No repo selected." && exit 1
+
+# Extract SSH URL
+repo_name=$(echo "$selected" | awk '{print $1}')
+ssh_url=$(echo "$selected" | awk '{print $2}')
+
+# Clone the selected repo
+echo "Cloning $ssh_url..."
+git clone "$ssh_url" ../$repo_name

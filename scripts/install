@@ -8,6 +8,17 @@ fi
 SCRIPT_PATH=`(dirname $BASH_SOURCE)`
 REPO_PATH=`(realpath $SCRIPT_PATH/..)`
 
+while getopts ":d" option; do
+    case $option in
+        d)
+            export NIL_BUILD_CPACK_DEB=1
+            export NIL_CPACK_OUT_DIR="$PWD/deb_pkg";;
+        \?)
+            echo "unknown option is provided: ${option}"
+            exit 1;;
+    esac
+done
+
 ${VCPKG_ROOT}/vcpkg                     \
     install                             \
     --overlay-ports=${REPO_PATH}/ports  \

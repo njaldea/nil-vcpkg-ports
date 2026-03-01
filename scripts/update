@@ -46,7 +46,8 @@ update_port() {
     HEAD_REF master
 )
 
-include(\${CMAKE_CURRENT_LIST_DIR}/port.cmake)" > "ports/${port_name}/portfile.cmake"
+include(\${CMAKE_CURRENT_LIST_DIR}/port.cmake)
+include(\${CMAKE_CURRENT_LIST_DIR}/../cpack.cmake)" > "ports/${port_name}/portfile.cmake"
 
   if [[ "$port_version" != "${baseline_version:1:-1}" ]]; then
     echo "[${port_name}]: v${port_version}" >> "${PORT_COMMIT_MSG}"
@@ -106,7 +107,7 @@ update_ports() {
 
   if [[ $PORT_UPDATE == "y" ]]; then
     echo -n "" > "${PORT_COMMIT_MSG}"
-    for dir in ${REPO_PATH}/ports/*; do
+    for dir in ${REPO_PATH}/ports/nil-*; do
       port_name="$(basename "$dir")"
       port_version="$(jq -r '.version' "$dir/vcpkg.json")"
 
@@ -116,12 +117,15 @@ update_ports() {
 }
 
 commit_ports() {
-  read -r -p "Do you want to commit port changes? [y/N] " PORT_COMMIT
-  PORT_COMMIT=${PORT_COMMIT,,}
+  if [ -n "$(git status --porcelain)" ]; then
+    echo "Working directory has changes"
+    read -r -p "Do you want to commit port changes? [y/N] " PORT_COMMIT
+    PORT_COMMIT=${PORT_COMMIT,,}
 
-  if [[ $PORT_COMMIT == "y" ]]; then
-    git add .
-    git commit -F "${PORT_COMMIT_MSG}"
+    if [[ $PORT_COMMIT == "y" ]]; then
+      git add .
+      git commit -F "${PORT_COMMIT_MSG}"
+    fi
   fi
 }
 
@@ -130,7 +134,7 @@ update_baselines() {
   BASELINE_UPDATE=${BASELINE_UPDATE,,}
 
   if [[ $BASELINE_UPDATE == "y" ]]; then
-    for dir in ${REPO_PATH}/ports/*; do
+    for dir in ${REPO_PATH}/ports/nil-*; do
       port_name="$(basename "$dir")"
       port_version="$(jq -r '.version' "$dir/vcpkg.json")"
 
@@ -140,12 +144,15 @@ update_baselines() {
 }
 
 commit_baselines() {
-  read -r -p "Do you want to commit baseline changes? [y/N] " BASELINE_COMMIT
-  BASELINE_COMMIT=${BASELINE_COMMIT,,}
+  if [ -n "$(git status --porcelain)" ]; then
+    echo "Working directory has changes"
+    read -r -p "Do you want to commit baseline changes? [y/N] " BASELINE_COMMIT
+    BASELINE_COMMIT=${BASELINE_COMMIT,,}
 
-  if [[ $BASELINE_COMMIT == "y" ]]; then
-    git add .
-    git commit -m "update versions"
+    if [[ $BASELINE_COMMIT == "y" ]]; then
+      git add .
+      git commit -m "update versions"
+    fi
   fi
 }
 
