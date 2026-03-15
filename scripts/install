@@ -12,7 +12,7 @@ while getopts ":d" option; do
     case $option in
         d)
             export NIL_BUILD_CPACK_DEB=1
-            export NIL_CPACK_OUT_DIR="$PWD/deb_pkg";;
+            export NIL_CPACK_OUT_DIR="$REPO_PATH/deb_pkg";;
         \?)
             echo "unknown option is provided: ${option}"
             exit 1;;

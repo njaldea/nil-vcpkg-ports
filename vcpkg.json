@@ -5,7 +5,10 @@
         "nil-cmake",
         "nil-xalt",
         "nil-clix",
-        "nil-gate",
+        { 
+            "name": "nil-gate",
+            "features": ["c-api"]
+        },
         "nil-service",
         "nil-xit",
         { 

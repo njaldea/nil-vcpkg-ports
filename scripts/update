@@ -10,6 +10,7 @@ REPO_PATH=`(realpath $SCRIPT_PATH/..)`
 
 PORT_COMMIT_MSG="${SCRIPT_PATH}/.commit.msg"
 BASELINE_FILE="${REPO_PATH}/versions/baseline.json"
+PORTFILE_TEMPLATE="${SCRIPT_PATH}/.portfile.cmake.in"
 FORCE_UPDATE=0
 
 parse_options() {
@@ -38,27 +39,7 @@ update_port() {
   port_homepage="$(jq -r '.homepage' "ports/$port_name/vcpkg.json")"
   port_hash="$(curl -LsS "${port_homepage}/archive/v${port_version}.tar.gz" | sha512sum | awk '{print $1}')"
 
-  cat > "ports/${port_name}/portfile.cmake" <<EOF
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO "njaldea/\${PORT}"
-    REF "v\${VERSION}"
-    SHA512 ${port_hash}
-    HEAD_REF master
-)
-
-include(\${CMAKE_CURRENT_LIST_DIR}/port.cmake)
-
-if (DEFINED ENV{NIL_BUILD_CPACK_DEB} AND "\$ENV{NIL_BUILD_CPACK_DEB}" STREQUAL "1")
-    set(BUILD_DIR "\${CURRENT_BUILDTREES_DIR}/\${TARGET_TRIPLET}-rel")
-    message(STATUS "Running CPack in build directory \${BUILD_DIR}")
-
-    execute_process(
-        COMMAND cpack -G DEB -D CPACK_OUTPUT_FILE_PREFIX=\$ENV{NIL_CPACK_OUT_DIR}
-        WORKING_DIRECTORY \${BUILD_DIR}
-    )
-endif()
-EOF
+  sed "s|@PORT_HASH@|${port_hash}|g" "$PORTFILE_TEMPLATE" > "ports/${port_name}/portfile.cmake"
 
   if [[ "$port_version" != "${baseline_version:1:-1}" ]]; then
     echo "[${port_name}]: v${port_version}" >> "${PORT_COMMIT_MSG}"
