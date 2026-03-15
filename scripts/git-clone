@@ -2,9 +2,7 @@
 
 # apt install fzf
 
-TOKEN_FILE="$HOME/.nil/git-token"
-
-repos=$(curl -s -H "Authorization: token $(< "$TOKEN_FILE")" \
+repos=$(curl -s -H "Authorization: token $(< "$NIL_GIT_TOKEN")" \
           "https://api.github.com/user/repos?per_page=100" \
           | jq -r '.[] | "\(.name)\t\(.ssh_url)"')
 
