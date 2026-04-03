@@ -1,6 +1,6 @@
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        ssl          ENABLE_SSL
+        c-api          ENABLE_C_API
 )
 
 vcpkg_cmake_configure(
@@ -18,6 +18,6 @@ set(USAGE_FILE ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage)
 file(WRITE  ${USAGE_FILE} "nil-service provides CMake targets:\n\n")
 file(APPEND ${USAGE_FILE} "    find_package(nil-service CONFIG REQUIRED)\n")
 file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::service)\n\n")
-file(APPEND ${USAGE_FILE} "    # for nil::service_ssl\n")
-file(APPEND ${USAGE_FILE} "    find_package(nil-service CONFIG REQUIRED COMPONENTS ssl)\n")
-file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::service-ssl)\n\n")
+file(APPEND ${USAGE_FILE} "    # for nil::service-c-api\n")
+file(APPEND ${USAGE_FILE} "    find_package(nil-service CONFIG REQUIRED COMPONENTS c-api)\n")
+file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::service-c-api)\n\n")

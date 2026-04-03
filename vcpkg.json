@@ -4,16 +4,17 @@
     "dependencies": [
         "nil-cmake",
         "nil-xalt",
-        "nil-clix",
+        { 
+            "name": "nil-clix",
+            "features": ["c-api"]
+        },
         { 
             "name": "nil-gate",
             "features": ["c-api"]
         },
-        "nil-service",
-        "nil-xit",
         { 
-            "name": "nil-xit-test",
-            "features": ["gtest"]
+            "name": "nil-service",
+            "features": ["c-api"]
         }
     ]
 }
