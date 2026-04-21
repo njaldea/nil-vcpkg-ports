@@ -19,6 +19,10 @@
         { 
             "name": "nil-xit",
             "features": ["c-api"]
+        },
+        { 
+            "name": "nil-xit-test",
+            "features": ["gtest"]
         }
     ]
 }
