@@ -14,6 +14,7 @@
             "host": true
         },
         "nil-cmake",
+        "nil-xalt",
         "boost-program-options"
     ],
     "features": {
