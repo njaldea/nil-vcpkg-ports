@@ -25,7 +25,7 @@
       "port-version": 0
     },
     "nil-xit-test": {
-      "baseline": "0.0.18",
+      "baseline": "0.0.19",
       "port-version": 0
     }
   }
