@@ -1,13 +1,16 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
     "name": "nil-xit-test",
-    "version": "0.0.18",
+    "version": "0.0.19",
     "description": "C++ API for Svelte UI - Test Layer",
     "homepage": "https://github.com/njaldea/nil-xit-test",
     "features": {
         "gtest": {
             "description": "nil-xit-gtest adapter",
-            "dependencies": ["gtest", "nil-clix"]
+            "dependencies": [
+                "gtest",
+                "nil-clix"
+            ]
         }
     },
     "dependencies": [
