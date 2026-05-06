@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "njaldea/${PORT}"
     REF "v${VERSION}"
-    SHA512 fff6e0415ee5039ed57b5b6373aac6df81de8e500856bb754b2e48ba95ff3d535e4649d1389bc0bf300dee130aa7d05dde8f6498f3236303c9a38a28b2ceaa90
+    SHA512 62db185b42da6c01caf9e7c6d1f38effad147f19b792cfe0e881c25f61f3f1cad5fbad69bca91d7f2bd6f54ee36395f391b6a31d7bb039bf0cdd095bef76fb8e
     HEAD_REF master
 )
 
