@@ -1,7 +1,7 @@
 {
   "default": {
     "nil-cmake": {
-      "baseline": "0.0.3",
+      "baseline": "0.0.4",
       "port-version": 0
     },
     "nil-xalt": {
@@ -21,7 +21,7 @@
       "port-version": 0
     },
     "nil-xit": {
-      "baseline": "0.3.11",
+      "baseline": "0.3.14",
       "port-version": 0
     },
     "nil-xit-test": {
