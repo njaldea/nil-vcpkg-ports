@@ -17,3 +17,14 @@ if (DEFINED ENV{NIL_BUILD_CPACK_DEB} AND "$ENV{NIL_BUILD_CPACK_DEB}" STREQUAL "1
         WORKING_DIRECTORY ${BUILD_DIR}
     )
 endif()
+
+
+if (DEFINED ENV{NIL_UPLOAD_PYPI} AND "$ENV{NIL_UPLOAD_PYPI}" STREQUAL "1")
+    set(BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    message(STATUS "Running ffi-python-stage in build directory ${BUILD_DIR}")
+
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} --build . --target ffi-python-stage
+        WORKING_DIRECTORY ${BUILD_DIR}
+    )
+endif()
