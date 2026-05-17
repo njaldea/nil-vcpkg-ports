@@ -8,11 +8,13 @@ fi
 SCRIPT_PATH=`(dirname $BASH_SOURCE)`
 REPO_PATH=`(realpath $SCRIPT_PATH/..)`
 
-while getopts ":d" option; do
+while getopts ":dp" option; do
     case $option in
         d)
             export NIL_BUILD_CPACK_DEB=1
             export NIL_CPACK_OUT_DIR="$REPO_PATH/deb_pkg";;
+        p)
+            export NIL_UPLOAD_PYPI=1;;
         \?)
             echo "unknown option is provided: ${option}"
             exit 1;;
