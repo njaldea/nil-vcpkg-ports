@@ -21,6 +21,22 @@ while getopts ":dp" option; do
     esac
 done
 
+STATUS_FILE="vcpkg_installed/vcpkg/status"
+if [[ -f "$STATUS_FILE" ]]; then
+    tmp_status=$(mktemp)
+    awk 'BEGIN { RS=""; ORS="\n\n" } $0 !~ /^Package: nil-/ { print }' \
+        "$STATUS_FILE" > "$tmp_status"
+    mv "$tmp_status" "$STATUS_FILE"
+fi
+
+rm -rf vcpkg_installed/x64-linux/debug/bin/nil*
+rm -rf vcpkg_installed/x64-linux/debug/lib/libnil*
+rm -rf vcpkg_installed/x64-linux/bin/nil-*
+rm -rf vcpkg_installed/x64-linux/lib/libnil-*
+rm -rf vcpkg_installed/x64-linux/include/nil-*
+rm -rf vcpkg_installed/x64-linux/share/nil-*
+rm -rf vcpkg_installed/x64-linux/share/doc/nil-*
+
 ${VCPKG_ROOT}/vcpkg                     \
     install                             \
     --overlay-ports=${REPO_PATH}/ports  \
