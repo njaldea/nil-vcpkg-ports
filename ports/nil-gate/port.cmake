@@ -21,3 +21,13 @@ file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::gate)\n\
 file(APPEND ${USAGE_FILE} "    # for nil::gate-c-api\n")
 file(APPEND ${USAGE_FILE} "    find_package(nil-gate CONFIG REQUIRED COMPONENTS c-api)\n")
 file(APPEND ${USAGE_FILE} "    target_link_libraries(TARGET PUBLIC nil::gate-c-api)\n\n")
+
+if (DEFINED ENV{NIL_UPLOAD_PYPI} AND "$ENV{NIL_UPLOAD_PYPI}" STREQUAL "1")
+    set(BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    message(STATUS "Running ffi-python-upload in build directory ${BUILD_DIR}")
+
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} --build . --target ffi-python-upload
+        WORKING_DIRECTORY ${BUILD_DIR}
+    )
+endif()

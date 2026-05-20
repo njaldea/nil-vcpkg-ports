@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "njaldea/${PORT}"
     REF "v${VERSION}"
-    SHA512 9805267a0fb56ad7d66b96edda439bf3336e38cc838060a222675d50048a99c02468db7db3bd31429eeafb3c3cb8a4f81bc70632913943b229464e9ac3cef764
+    SHA512 320fd6568fbad7fc537dbd920c88f063bd6396a5ff0c32b7d240cd676ea37bcd54fd21b7bebd3a1b8e2d2245ecf600ba2ecc241578ef89ea78f8c95f720bb3c1
     HEAD_REF master
 )
 
@@ -14,16 +14,6 @@ if (DEFINED ENV{NIL_BUILD_CPACK_DEB} AND "$ENV{NIL_BUILD_CPACK_DEB}" STREQUAL "1
 
     execute_process(
         COMMAND cpack -G DEB -D CPACK_OUTPUT_FILE_PREFIX=$ENV{NIL_CPACK_OUT_DIR}
-        WORKING_DIRECTORY ${BUILD_DIR}
-    )
-endif()
-
-if (DEFINED ENV{NIL_UPLOAD_PYPI} AND "$ENV{NIL_UPLOAD_PYPI}" STREQUAL "1")
-    set(BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-    message(STATUS "Running ffi-python-upload in build directory ${BUILD_DIR}")
-
-    execute_process(
-        COMMAND ${CMAKE_COMMAND} --build . --target ffi-python-upload
         WORKING_DIRECTORY ${BUILD_DIR}
     )
 endif()
