@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ $0 != $BASH_SOURCE ]]; then
+    echo "do not source this script"
+    return 1
+fi
+
+SCRIPT_PATH=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+REPO_PATH=$(cd -- "${SCRIPT_PATH}/.." && pwd)
+BASELINE_FILE="${REPO_PATH}/versions/baseline.json"
+OUTPUT_FILE="${REPO_PATH}/VERSIONS.md"
+
+if ! command -v jq >/dev/null 2>&1; then
+    echo "jq is required but not installed" >&2
+    exit 1
+fi
+
+if [[ ! -f "$BASELINE_FILE" ]]; then
+    echo "baseline.json not found at: $BASELINE_FILE" >&2
+    exit 1
+fi
+
+write_header() {
+    local name_width="$1"
+    local doc_width="$2"
+
+    printf '| %-*s | %-*s |\n' "$name_width" "name" "$doc_width" "doc"
+    printf '|-%s-|-%s-|\n' \
+        "$(printf '%*s' "$name_width" '' | tr ' ' '-')" \
+        "$(printf '%*s' "$doc_width" '' | tr ' ' '-')"
+}
+
+get_homepage() {
+    local port_name="$1"
+    local vcpkg_file="${REPO_PATH}/ports/${port_name}/vcpkg.json"
+
+    if [[ -f "$vcpkg_file" ]]; then
+        jq -r '.homepage // empty' "$vcpkg_file"
+    else
+        echo ""
+    fi
+}
+
+rows_file=$(mktemp)
+
+jq -r '.default | to_entries | sort_by(.key) | .[] | "\(.key)\t\(.value.baseline)"' \
+    "$BASELINE_FILE" | while IFS=$'\t' read -r name version; do
+        homepage="$(get_homepage "$name")"
+        if [[ -z "$homepage" ]]; then
+            homepage="https://github.com/njaldea/${name}"
+        fi
+
+        homepage="${homepage%/}"
+        printf '%s\t%s\t%s\n' "$name" "$version" "$homepage" >> "$rows_file"
+    done
+
+name_width=$(awk -F'\t' 'length($1) > m { m = length($1) } END { print (m ? m : 4) }' "$rows_file")
+doc_width=$(awk -F'\t' '{ doc = "[" $2 "](" $3 "/tree/v" $2 ")"; if (length(doc) > m) m = length(doc) } END { print (m ? m : 3) }' "$rows_file")
+
+tmp_file=$(mktemp)
+{
+    write_header "$name_width" "$doc_width"
+    while IFS=$'\t' read -r name version homepage; do
+        doc="[${version}](${homepage}/tree/v${version})"
+        printf '| %-*s | %-*s |\n' "$name_width" "$name" "$doc_width" "$doc"
+    done < "$rows_file"
+} > "$tmp_file"
+
+mv "$tmp_file" "$OUTPUT_FILE"
+rm -f "$rows_file"
+
+echo "Wrote $OUTPUT_FILE"
