@@ -43,6 +43,10 @@
     {
       "version": "0.3.17",
       "git-tree": "5ce75ef2dd50daa1bd016b14a7782052cab8e961"
+    },
+    {
+      "version": "0.3.19",
+      "git-tree": "f156a9ff24c8c6d44d726144c9f9038aea61e9fb"
     }
   ]
 }
