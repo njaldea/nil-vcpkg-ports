@@ -200,6 +200,8 @@ update_baselines() {
       update_baseline $port_name $port_version
     done
 
+    "${REPO_PATH}/scripts/versions"
+
     commit_baselines
   fi
 }

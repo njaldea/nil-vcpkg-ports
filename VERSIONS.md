@@ -5,5 +5,5 @@
 | nil-gate     | [1.6.9](https://github.com/njaldea/nil-gate/tree/v1.6.9)       |
 | nil-service  | [1.0.20](https://github.com/njaldea/nil-service/tree/v1.0.20)  |
 | nil-xalt     | [1.4.2](https://github.com/njaldea/nil-xalt/tree/v1.4.2)       |
-| nil-xit      | [0.3.17](https://github.com/njaldea/nil-xit/tree/v0.3.17)      |
-| nil-xit-test | [0.0.23](https://github.com/njaldea/nil-xit-test/tree/v0.0.23) |
+| nil-xit      | [0.3.19](https://github.com/njaldea/nil-xit/tree/v0.3.19)      |
+| nil-xit-test | [0.0.24](https://github.com/njaldea/nil-xit-test/tree/v0.0.24) |
