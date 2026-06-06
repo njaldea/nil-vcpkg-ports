@@ -223,6 +223,7 @@ commit_baselines() {
     fi
 
     git add versions
+    git add VERSIONS.md
     git commit -m "update versions"
   fi
 }
