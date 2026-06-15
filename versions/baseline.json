@@ -21,11 +21,11 @@
       "port-version": 0
     },
     "nil-xit": {
-      "baseline": "0.3.22",
+      "baseline": "0.3.23",
       "port-version": 0
     },
     "nil-xit-test": {
-      "baseline": "0.0.26",
+      "baseline": "0.0.27",
       "port-version": 0
     }
   }
