@@ -1,0 +1,19 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+    "name": "nil-sm",
+    "version": "0.0.1",
+    "description": "C++20 header-only library for building typed state machines",
+    "homepage": "https://github.com/njaldea/nil-sm",
+    "dependencies": [
+        {
+            "name": "vcpkg-cmake",
+            "host": true
+        },
+        {
+            "name": "vcpkg-cmake-config",
+            "host": true
+        },
+        "nil-cmake",
+        "nil-xalt"
+    ]
+}

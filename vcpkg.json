@@ -4,6 +4,7 @@
     "dependencies": [
         "nil-cmake",
         "nil-xalt",
+        "nil-sm",
         { 
             "name": "nil-clix",
             "features": ["c-api"]
