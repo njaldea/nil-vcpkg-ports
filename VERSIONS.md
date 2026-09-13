@@ -1,7 +1,7 @@
 | name         | doc                                                            |
 |--------------|----------------------------------------------------------------|
 | nil-clix     | [1.0.11](https://github.com/njaldea/nil-clix/tree/v1.0.11)     |
-| nil-cmake    | [0.0.5](https://github.com/njaldea/nil-cmake/tree/v0.0.5)      |
+| nil-cmake    | [0.0.6](https://github.com/njaldea/nil-cmake/tree/v0.0.6)      |
 | nil-gate     | [1.6.9](https://github.com/njaldea/nil-gate/tree/v1.6.9)       |
 | nil-service  | [1.0.20](https://github.com/njaldea/nil-service/tree/v1.0.20)  |
 | nil-sm       | [0.0.1](https://github.com/njaldea/nil-sm/tree/v0.0.1)         |
