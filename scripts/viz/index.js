@@ -1,17 +1,34 @@
 const $ = id => document.getElementById(id);
-let data, byHash, commits, shown;
+
+let data;
+let byHash;
+let commits;
+let shown;
 let selected = null;
 let walked = new Set();
-let graphToken = 0;
-let elk;
 
-// Per-commit data never changes, so keep one request per hash for the page lifetime.
+let currentRender;
+
+
+/*
+ * Per-commit data never changes, so keep one request per hash
+ * for the page lifetime.
+ */
 const depsCache = new Map();
+
 function depsOf(h) {
   if (!depsCache.has(h)) {
-    const req = fetch("deps/" + h + ".json")
-      .then(r => { if (!r.ok) throw new Error("deps/" + h + ".json: " + r.status); return r.json(); })
-      .catch(err => { depsCache.delete(h); throw err; });
+    const url = "deps/" + h + ".json";
+    const req = fetch(url)
+      .then(r => {
+        if (!r.ok) throw new Error(`${url}: ${r.status}`);
+        return r.json();
+      })
+      .catch(err => {
+        depsCache.delete(h);
+        throw err;
+      });
+
     depsCache.set(h, req);
   }
   return depsCache.get(h);
@@ -33,10 +50,19 @@ function svg(tag, attrs, ...children) {
 
 function prevOf(c) { return (byHash[c.p] || c).v; }
 
-// Walk back from c; each commit colors the ports that newer commits left uncolored.
+
+/*
+ * Walk back from c; each commit colors the ports that newer
+ * commits left uncolored.
+ */
 async function walk(c) {
   const ports = Object.keys(c.v);
-  const state = {}, from = {}, cause = {}, used = [];
+
+  const state = {};
+  const from = {};
+  const cause = {};
+  const used = [];
+
   for (let r = c; r && Object.keys(state).length < ports.length; r = byHash[r.p]) {
     const e = await depsOf(r.h);
     const prev = prevOf(r);
@@ -59,46 +85,60 @@ async function walk(c) {
   return { state, from, cause, used };
 }
 
-async function renderGraph(c) {
-  const token = ++graphToken;
-  let w, e;
-  try {
-    [w, e] = await Promise.all([walk(c), depsOf(c.h)]);
-  } catch (err) {
-    if (token === graphToken) $("graph").textContent = "failed to load dependencies: " + err.message;
-    return;
+class Render {
+  constructor(commit) {
+    this.commit = commit;
+    currentRender = this;
   }
-  if (token !== graphToken) return;
 
-  const { state, from, cause, used } = w;
-  walked = new Set(used.map(r => r.h));
-  for (const tr of document.querySelectorAll("tbody tr")) tr.classList.toggle("range", walked.has(tr.dataset.h));
+  check() {
+    if (currentRender !== this) throw new Error("render cancelled");
+  }
 
-  const ports = Object.keys(c.v).sort();
-  const deps = p => (e[p] || []).filter(d => d in c.v);
-  const W = 120, H = 40, PAD = 18;
-  const stateOf = p => state[p] || "ok";
-  const outdated = (p, d) => state[p] === "stale" && cause[p].includes(d);
+  async run() {
+    let walkResult;
+    let dependencies;
 
-  // ELK is loaded by the preceding script tag. Dependencies appear above
-  // their dependents; ELK supplies node ordering and orthogonal edge routing.
-  let layout;
-  try {
-    elk ||= new ELK();
-    const graph = {
+    try {
+      [ walkResult, dependencies ] = await Promise.all([ walk(this.commit), depsOf(this.commit.h) ]);
+      this.check();
+    }
+    catch (err) {
+      if (currentRender === this) $("graph").textContent = "failed to load dependencies: " + err.message;
+
+      return;
+    }
+
+    const { state, from, cause, used } = walkResult;
+    const walked = new Set(used.map(r => r.h));
+    for (const tr of document.querySelectorAll("tbody tr")) tr.classList.toggle("range", walked.has(tr.dataset.h));
+
+    const c = this.commit;
+    const ports = Object.keys(c.v).sort();
+    const deps = p => (dependencies[p] || []).filter(d => d in c.v);
+    const W = 120, H = 40, PAD = 18;
+    const stateOf = p => state[p] || "ok";
+    const outdated = (p, d) => state[p] === "stale" && cause[p].includes(d);
+
+    const layout = await new ELK().layout({
       id: "root",
+
       layoutOptions: {
         "elk.algorithm": "layered",
         "elk.direction": "UP",
         "elk.edgeRouting": "ORTHOGONAL",
-        "elk.layered.spacing.nodeNodeBetweenLayers": "70",
-        "elk.spacing.nodeNode": "28",
-        "elk.layered.spacing.edgeNodeBetweenLayers": "18",
+        "elk.layered.spacing.nodeNodeBetweenLayers": "20",
+        "elk.spacing.nodeNode": "10",
+        "elk.layered.spacing.edgeNodeBetweenLayers": "16",
         "elk.layered.spacing.edgeEdgeBetweenLayers": "12",
         "elk.layered.crossingMinimization.strategy": "LAYER_SWEEP",
-        "elk.layered.nodePlacement.strategy": "NETWORK_SIMPLEX",
+        "elk.layered.nodePlacement.strategy": "BRANDES_KOEPF",
+        "elk.layered.layering.strategy": "NETWORK_SIMPLEX",
         "elk.layered.cycleBreaking.strategy": "GREEDY",
         "elk.layered.considerModelOrder.strategy": "NODES_AND_EDGES",
+        "elk.layered.compaction.postCompaction": true,
+        "elk.layered.compaction.componentCompaction": true,
+        "elk.layered.mergeEdges": false,
         "elk.padding": `[top=${PAD},left=${PAD},bottom=${PAD},right=${PAD}]`
       },
       children: ports.map((p, i) => ({
@@ -113,86 +153,68 @@ async function renderGraph(c) {
         sources: [p],
         targets: [d]
       })))
-    };
-    layout = await elk.layout(graph);
-  } catch (err) {
-    // Keep the graph usable if the CDN is unavailable. This fallback is
-    // deliberately simple; normally ELK supplies the polished DAG layout.
-    if (token !== graphToken) return;
-    console.warn("ELK layout unavailable, using fallback layout:", err);
-    const depth = {};
-    const visiting = new Set();
-    const depthOf = p => {
-      if (p in depth) return depth[p];
-      if (visiting.has(p)) return 0;
-      visiting.add(p);
-      depth[p] = Math.max(0, ...deps(p).map(d => depthOf(d) + 1));
-      visiting.delete(p);
-      return depth[p];
-    };
-    ports.forEach(depthOf);
-    const layers = [];
-    ports.forEach(p => (layers[depth[p]] ||= []).push(p));
-    let y = PAD;
-    const nodes = {};
-    layers.forEach(layer => {
-      layer.forEach((p, i) => nodes[p] = { id: p, x: PAD + depth[p] * 190, y: y + i * 60, width: W, height: H });
-      y += Math.max(60, layer.length * 60);
     });
-    layout = { width: 220 + Math.max(...Object.values(nodes).map(n => n.x), 0), height: y + PAD, children: Object.values(nodes), edges: [] };
-    for (const p of ports) for (const d of deps(p)) {
-      const a = nodes[p], b = nodes[d];
-      layout.edges.push({ id: `${p}=>${d}`, sections: [{ startPoint: { x: a.x + W, y: a.y + H / 2 }, bendPoints: [{ x: b.x - 20, y: a.y + H / 2 }, { x: b.x - 20, y: b.y + H / 2 }], endPoint: { x: b.x, y: b.y + H / 2 } }] });
+
+    this.check();
+
+    const width = Math.max(W + PAD * 2, layout.width || 0);
+    const height = Math.max(H + PAD * 2, layout.height || 0);
+    const root = svg("svg", { viewBox: `0 0 ${width} ${height}`, width: "100%" },
+      svg("defs", {}, ...["edge", "stale"].map(k =>
+        svg("marker", { id: "arrow-" + k, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 5, markerHeight: 5, orient: "auto" },
+          svg("path", { d: "M0,0 L10,5 L0,10 z", class: k })))));
+
+    const point = p => `${p.x},${p.y}`;
+    for (const edge of layout.edges || []) {
+      const parts = edge.id.split("=>");
+      const p = parts[0];
+      const d = parts[1]?.split("#")[0];
+      if (!(p in c.v) || !(d in c.v)) continue;
+      const section = edge.sections?.[0];
+      if (!section) continue;
+      const points = [section.startPoint, ...(section.bendPoints || []), section.endPoint];
+      const k = outdated(p, d) ? "stale" : "edge";
+      root.append(svg("path", {
+        d: "M" + points.map(point).join(" L"),
+        class: k,
+        fill: "none",
+        "marker-end": `url(#arrow-${k})`
+      }));
     }
+
+    const nodeById = new Map((layout.children || []).map(n => [n.id, n]));
+    for (const p of ports) {
+      const n = nodeById.get(p);
+      if (!n) continue;
+      const st = stateOf(p);
+      const at = from[p] ? " in " + from[p].h.slice(0, 7) : "";
+      const title = st === "latest" ? "updated" + at
+        : st === "stale" ? "not updated after " + cause[p].join(", ") + at : "no change found";
+      const node = svg("g", { class: "node " + st, transform: `translate(${n.x},${n.y})` },
+        svg("title", {}, title),
+        svg("rect", { width: W, height: H, rx: 6 }),
+        svg("text", { x: W / 2, y: 17, "text-anchor": "middle" }, p),
+        svg("text", { x: W / 2, y: 32,"text-anchor": "middle", class: "ver" }, c.v[p]));
+      node.onmouseenter = () => {
+        if (st === "ok") return;
+        const row = document.querySelector(`#wrap tbody tr[data-h="${from[p].h}"]`);
+        if (!row) return;
+        row.classList.add("port-hover", st);
+        const causes = st === "latest" ? [p] : cause[p];
+        for (const td of row.querySelectorAll("td[data-p]")) td.classList.toggle("cause-hover", causes.includes(td.dataset.p));
+      };
+      node.onmouseleave = () => {
+        for (const x of document.querySelectorAll("#wrap .port-hover, #wrap .cause-hover")) x.classList.remove("port-hover", "latest", "stale", "cause-hover");
+      };
+      root.append(node);
+    }
+
+    const swatch = color => el("span", { className: "swatch", style: "background:" + color });
+    const span = `walked ${used.length} commit(s): ${c.h.slice(0, 7)} back to ${used[used.length - 1].h.slice(0, 7)}`;
+    $("graph").className = "";
+    $("graph").replaceChildren(el("div", { className: "hint" }, span), root, el("div", { className: "hint" },
+      "arrow = depends on", swatch("#86efac"), "updated", swatch("#fde68a"), "a dependency was updated after it"));
   }
-
-  if (token !== graphToken) return;
-
-  const width = Math.max(W + PAD * 2, layout.width || 0);
-  const height = Math.max(H + PAD * 2, layout.height || 0);
-  const root = svg("svg", { viewBox: `0 0 ${width} ${height}`, width: "100%" },
-    svg("defs", {}, ...["edge", "stale"].map(k =>
-      svg("marker", { id: "arrow-" + k, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 5, markerHeight: 5, orient: "auto" },
-        svg("path", { d: "M0,0 L10,5 L0,10 z", class: k }))))) ;
-
-  const point = p => `${p.x},${p.y}`;
-  for (const edge of layout.edges || []) {
-    const parts = edge.id.split("=>");
-    const p = parts[0];
-    const d = parts[1]?.split("#")[0];
-    if (!(p in c.v) || !(d in c.v)) continue;
-    const section = edge.sections?.[0];
-    if (!section) continue;
-    const points = [section.startPoint, ...(section.bendPoints || []), section.endPoint];
-    const k = outdated(p, d) ? "stale" : "edge";
-    root.append(svg("path", {
-      d: "M" + points.map(point).join(" L"),
-      class: k,
-      fill: "none",
-      "marker-end": `url(#arrow-${k})`
-    }));
-  }
-
-  const nodeById = new Map((layout.children || []).map(n => [n.id, n]));
-  for (const p of ports) {
-    const n = nodeById.get(p);
-    if (!n) continue;
-    const st = stateOf(p);
-    const at = from[p] ? " in " + from[p].h.slice(0, 7) : "";
-    const title = st === "latest" ? "updated" + at
-      : st === "stale" ? "not updated after " + cause[p].join(", ") + at : "no change found";
-    root.append(svg("g", { class: "node " + st, transform: `translate(${n.x},${n.y})` },
-      svg("title", {}, title),
-      svg("rect", { width: W, height: H, rx: 6 }),
-      svg("text", { x: W / 2, y: 17, "text-anchor": "middle" }, p),
-      svg("text", { x: W / 2, y: 32, "text-anchor": "middle", class: "ver" }, c.v[p])));
-  }
-
-  const swatch = color => el("span", { className: "swatch", style: "background:" + color });
-  const span = `walked ${used.length} commit(s): ${c.h.slice(0, 7)} back to ${used[used.length - 1].h.slice(0, 7)}`;
-  $("graph").className = "";
-  $("graph").replaceChildren(el("div", { className: "hint" }, span), root, el("div", { className: "hint" },
-    "arrow = depends on", swatch("#86efac"), "updated", swatch("#fde68a"), "a dependency was updated after it"));
 }
 
 function cell(c, prev, p) {
@@ -227,11 +249,7 @@ function render() {
 
   const head = el("tr", {}, el("th", {}, "commit"), el("th", {}, "date"));
   for (const p of ports) {
-    head.append(el("th", {
-      textContent: p,
-      title: "show only " + p,
-      onclick: () => { shown.clear(); shown.add(p); $("only").checked = true; render(); },
-    }));
+    head.append(el("th", { textContent: p }));
   }
   document.querySelector("thead").replaceChildren(head);
 
@@ -245,7 +263,7 @@ function render() {
       : c.h.slice(0, 7);
     const tr = el("tr", { className: (c === selected ? "sel " : "") + (walked.has(c.h) ? "range" : ""), onclick: () => select(c) },
       el("td", {}, el("code", {}, hash)), el("td", {}, c.d),
-      ...ports.map(p => cell(c, prev, p)));
+      ...ports.map(p => { const td = cell(c, prev, p); td.dataset.p = p; return td; }));
     tr.dataset.h = c.h;
     rows.push(tr);
   }
@@ -256,7 +274,7 @@ function render() {
 
 function renderDetail() {
   if (!selected) return;
-  renderGraph(selected);
+  new Render(selected).run();
   const c = selected, prev = prevOf(c);
   const names = [...new Set([...Object.keys(c.v), ...Object.keys(prev)])].sort();
   const list = el("table", {}, ...names.map(p => el("tr", {}, el("td", {}, p), cell(c, prev, p))));
@@ -278,10 +296,11 @@ function renderDetail() {
   );
 }
 
-fetch("commits.json")
-  .then(r => { if (!r.ok) throw new Error("commits.json: " + r.status); return r.json(); })
-  .then(d => {
-    data = d;
+async function load() {
+  try {
+    const response = await fetch("commits.json");
+    if (!response.ok) throw new Error("commits.json: " + response.status);
+    data = await response.json();
     byHash = Object.fromEntries(data.commits.map(c => [c.h, c]));
     commits = data.commits.slice(data.start).reverse();
     shown = new Set(data.ports);
@@ -292,5 +311,9 @@ fetch("commits.json")
       if (e.key === "Escape") { data.ports.forEach(p => shown.add(p)); $("only").checked = false; $("q").value = ""; render(); }
     });
     render();
-  })
-  .catch(err => { $("graph").textContent = "failed to load commits: " + err.message; });
+  } catch (err) {
+    $("graph").textContent = "failed to load commits: " + err.message;
+  }
+}
+
+load();

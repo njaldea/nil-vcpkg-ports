@@ -1,7 +1,7 @@
 :root { color-scheme: light dark; --bg: #fff; --fg: #222; --muted: #999; --line: #ddd; --chg: #fff3b0; --new: #c8f7c5; --del: #f8c7c7; --sel: #dbeafe; }
 @media (prefers-color-scheme: dark) { :root { --bg: #1e1e1e; --fg: #ddd; --muted: #666; --line: #333; --chg: #5a4a00; --new: #1f4d1c; --del: #5a1f1f; --sel: #1e3a5f; } }
 body { margin: 0; font: 13px system-ui, sans-serif; background: var(--bg); color: var(--fg); display: flex; height: 100vh; }
-#main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+#main { flex: 1; display: flex; flex-direction: column; min-width: 250px; }
 header { padding: 8px; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 #q { flex: 1; min-width: 200px; padding: 4px 6px; }
 #ports button { margin: 2px; padding: 2px 8px; border-radius: 10px; border: 1px solid var(--line); background: none; color: var(--muted); cursor: pointer; }
@@ -9,7 +9,7 @@ header { padding: 8px; border-bottom: 1px solid var(--line); display: flex; flex
 #wrap { overflow: auto; flex: 1; }
 table { border-collapse: collapse; white-space: nowrap; }
 th, td { padding: 3px 8px; border-bottom: 1px solid var(--line); text-align: left; }
-thead th { position: sticky; top: 0; background: var(--bg); cursor: pointer; z-index: 1; }
+thead th { position: sticky; top: 0; background: var(--bg); z-index: 1; }
 td.v { font-family: monospace; color: var(--muted); }
 td.chg { background: var(--chg); color: var(--fg); font-weight: bold; }
 td.new { background: var(--new); color: var(--fg); font-weight: bold; }
@@ -17,11 +17,14 @@ td.del { background: var(--del); text-decoration: line-through; }
 tr { cursor: pointer; }
 tr.sel td { outline: 1px solid #3b82f6; }
 tr.range td:first-child { box-shadow: inset 3px 0 #3b82f6; }
+tr.port-hover td { outline: 1px solid #eab308; outline-offset: -1px; }
+tr.port-hover td.cause-hover { outline: 2px solid #eab308; outline-offset: -2px; }
+tr.port-hover.latest td { outline-color: #16a34a; }
 code, pre { font-family: monospace; }
 aside { width: 520px; border-left: 1px solid var(--line); padding: 8px; overflow: auto; }
 aside pre { background: var(--sel); padding: 6px; white-space: pre-wrap; word-break: break-all; }
 .hint { color: var(--muted); }
-#graph svg { display: block; margin-bottom: 4px; }
+#graph svg { display: block; margin-bottom: 4px; min-width: 500px; }
 .node rect { fill: var(--bg); stroke: var(--muted); }
 .node text { fill: var(--fg); font: 12px system-ui, sans-serif; }
 .node text.ver { font-family: monospace; font-size: 11px; }
