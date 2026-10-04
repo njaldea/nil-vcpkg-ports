@@ -1,0 +1,277 @@
+#!/usr/bin/env lua
+
+-- Usage: scripts/viz/gen
+-- Generates commits.json and deps/<hash>.json for every commit, then exits.
+-- Removes generated JSON and temporary dumps first, then rebuilds from Git.
+
+local script_dir = arg[0]:match("^(.*)/[^/]*$") or "."
+local repo = script_dir .. "/../.."
+local baseline_path = "versions/baseline.json"
+-- first commit after the legacy "nil" port was removed; older history is hidden in the table
+local since = "51bb63e"
+
+local function run(cmd)
+    local p = assert(io.popen(cmd, "r"))
+    local out = p:read("*a")
+    p:close()
+    return out
+end
+
+local function git(args)
+    return run("git -C '" .. repo .. "' " .. args)
+end
+
+local function read_file(path)
+    local f = assert(io.open(path, "rb"))
+    local s = f:read("*a")
+    f:close()
+    return s
+end
+
+local function generate_file(path, generate)
+    local body = generate()
+    if not body then
+        return nil
+    end
+    -- Publish only complete JSON files.
+    local tmp = path .. ".tmp"
+    local f = assert(io.open(tmp, "wb"))
+    assert(f:write(body))
+    assert(f:close())
+    assert(os.rename(tmp, path))
+    return true
+end
+
+local function parse_baseline(json)
+    local ports = {}
+    local default = json:match('"default"%s*:%s*(%b{})')
+    if not default then
+        return ports
+    end
+    for name, body in default:sub(2, -2):gmatch('"([^"]+)"%s*:%s*(%b{})') do
+        local version = body:match('"baseline"%s*:%s*"([^"]*)"')
+        local port_version = tonumber(body:match('"port%-version"%s*:%s*(%d+)')) or 0
+        if version then
+            if port_version ~= 0 then
+                version = version .. "#" .. port_version
+            end
+            ports[name] = version
+        end
+    end
+    return ports
+end
+
+local function cat_files(specs)
+    local tmp = os.tmpname()
+    local f = assert(io.open(tmp, "w"))
+    f:write(table.concat(specs, "\n"), "\n")
+    f:close()
+    local raw = git("cat-file --batch < '" .. tmp .. "'")
+    os.remove(tmp)
+
+    local results, pos = {}, 1
+    for i = 1, #specs do
+        local nl = raw:find("\n", pos, true)
+        if not nl then
+            break
+        end
+        local size = tonumber(raw:sub(pos, nl - 1):match("^%x+ %a+ (%d+)$"))
+        if size then
+            results[i] = raw:sub(nl + 1, nl + size)
+            pos = nl + size + 2
+        else
+            pos = nl + 1
+        end
+    end
+    return results
+end
+
+local function parse_deps(manifest, ports, self)
+    -- drop optional feature dependencies so only the top-level list is matched
+    manifest = manifest and manifest:gsub('"features"%s*:%s*%b{}', "")
+    local arr = manifest and manifest:match('"dependencies"%s*:%s*(%b[])')
+    if not arr then
+        return {}
+    end
+    local names = {}
+    local rest = arr:gsub("%b{}", function(obj)
+        names[#names + 1] = obj:match('"name"%s*:%s*"([^"]+)"')
+        return ""
+    end)
+    for name in rest:gmatch('"([^"]+)"') do
+        names[#names + 1] = name
+    end
+    local deps = {}
+    for _, name in pairs(names) do
+        if ports[name] and name ~= self then
+            deps[#deps + 1] = name
+        end
+    end
+    table.sort(deps)
+    return deps
+end
+
+local function json(v)
+    if type(v) == "number" then
+        return tostring(v)
+    end
+    if type(v) == "string" then
+        return '"' .. v:gsub('[%c"\\<>&]', function(ch)
+            return string.format("\\u%04x", ch:byte())
+        end) .. '"'
+    end
+    local parts = {}
+    if v[1] ~= nil then
+        for _, item in ipairs(v) do
+            parts[#parts + 1] = json(item)
+        end
+        return "[" .. table.concat(parts, ",") .. "]"
+    end
+    for k, item in pairs(v) do
+        parts[#parts + 1] = json(k) .. ":" .. json(item)
+    end
+    return "{" .. table.concat(parts, ",") .. "}"
+end
+
+local function load_commits()
+    -- History simplification rewrites parents to the nearest commit that touched the file.
+    local log = git("log --reverse --topo-order --parents --date=short --format='%H %P%x09%ad' -- " .. baseline_path)
+
+    local commits = {}
+    for line in log:gmatch("[^\n]+") do
+        local hashes, date = line:match("^([^\t]+)\t([^\t]*)$")
+        local list = {}
+        for h in hashes:gmatch("%x+") do
+            list[#list + 1] = h
+        end
+        commits[#commits + 1] = {
+            hash = table.remove(list, 1),
+            parents = list,
+            date = date,
+        }
+    end
+
+    local specs = {}
+    for i, c in ipairs(commits) do
+        specs[i] = c.hash .. ":" .. baseline_path
+    end
+    local baselines = cat_files(specs)
+
+    -- older commits are still sent so the walk-back can continue past the first shown commit
+    local start = 1
+    for i, c in ipairs(commits) do
+        c.ports = parse_baseline(baselines[i] or "")
+        if c.hash:sub(1, #since) == since then
+            start = i
+        end
+    end
+    return commits, start
+end
+
+local function commits_payload()
+    local commits, start = load_commits()
+    local remote = git("remote get-url origin 2>/dev/null"):gsub("%s+$", "")
+    local slug = remote:match("github%.com[:/](.-)%.git$") or remote:match("github%.com[:/](.+)$")
+
+    local all, seen, list = {}, {}, {}
+    for i, c in ipairs(commits) do
+        if i >= start then
+            for name in pairs(c.ports) do
+                if not seen[name] then
+                    seen[name] = true
+                    all[#all + 1] = name
+                end
+            end
+        end
+        list[#list + 1] = { h = c.hash, p = c.parents[1] or "", d = c.date, v = c.ports }
+    end
+    table.sort(all)
+
+    return json({
+        remote = remote,
+        web = slug and ("https://github.com/" .. slug) or "",
+        ports = all,
+        commits = list,
+        start = start - 1,
+    })
+end
+
+local function deps_payload(hash)
+    local baseline = cat_files({ hash .. ":" .. baseline_path })[1]
+    if not baseline then
+        return nil
+    end
+    local ports = parse_baseline(baseline)
+
+    local names, specs = {}, {}
+    for name in pairs(ports) do
+        names[#names + 1] = name
+        specs[#specs + 1] = hash .. ":ports/" .. name .. "/vcpkg.json"
+    end
+    local manifests = cat_files(specs)
+    local deps = {}
+    for i, name in ipairs(names) do
+        local list = parse_deps(manifests[i], ports, name)
+        if #list > 0 then
+            deps[name] = list
+        end
+    end
+    return json(deps)
+end
+
+local function generate_commits()
+    local path = script_dir .. "/commits.json"
+    assert(generate_file(path, commits_payload))
+    return read_file(path)
+end
+
+local function generate_deps(hash)
+    return generate_file(script_dir .. "/deps/" .. hash .. ".json", function()
+        return deps_payload(hash)
+    end)
+end
+
+local function cleanup()
+    local function remove(path)
+        local ok, err, code = os.remove(path)
+        assert(ok or code == 2, err)
+    end
+    remove(script_dir .. "/commits.json")
+    remove(script_dir .. "/commits.json.tmp")
+    assert(os.execute("mkdir -p '" .. script_dir .. "/deps'"))
+    -- Only remove generated hash-named dumps; preserve other files in deps.
+    local files = run("find '" .. script_dir .. "/deps' -maxdepth 1 -type f -printf '%f\\n'")
+    for name in files:gmatch("[^\n]+") do
+        local hash = name:match("^(%x+)%.json$") or name:match("^(%x+)%.json%.tmp$")
+        if hash and #hash == 40 then
+            remove(script_dir .. "/deps/" .. name)
+        end
+    end
+end
+
+local function usage(out)
+    out:write("usage: gen\n",
+        "Clean generated dumps, rebuild commits.json and all dependency dumps, then exit.\n",
+        "  -h, --help      Show this help.\n")
+end
+
+for _, value in ipairs(arg) do
+    if value == "-h" or value == "--help" then
+        usage(io.stdout)
+        os.exit(0)
+    else
+        usage(io.stderr)
+        os.exit(1)
+    end
+end
+
+cleanup()
+local body = generate_commits()
+local count = 0
+-- The generated schema stores each commit's full hash in its "h" field.
+for hash in body:gmatch('"h"%s*:%s*"(%x+)"') do
+    assert(#hash == 40, "invalid commit hash in commits.json: " .. hash)
+    assert(generate_deps(hash), "cannot generate dependencies for " .. hash)
+    count = count + 1
+end
+print("Cache ready: commits.json and " .. count .. " dependency dump(s)")

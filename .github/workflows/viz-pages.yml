@@ -1,0 +1,56 @@
+name: Deploy visualization to GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Install Lua
+        run: sudo apt-get update && sudo apt-get install --yes lua5.4
+
+      - name: Generate visualization data
+        run: lua5.4 scripts/viz/gen
+
+      - name: Prepare static site
+        run: |
+          mkdir -p _site
+          cp scripts/viz/index.html scripts/viz/index.js scripts/viz/style.css scripts/viz/commits.json _site/
+          cp -r scripts/viz/deps _site/deps
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
