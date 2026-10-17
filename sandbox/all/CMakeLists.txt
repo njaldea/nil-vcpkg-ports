@@ -1,0 +1,18 @@
+project(sandbox_all)
+
+find_package(nil-xalt CONFIG REQUIRED)
+find_package(nil-sm CONFIG REQUIRED COMPONENTS viz)
+find_package(nil-clix CONFIG REQUIRED)
+find_package(nil-gate CONFIG REQUIRED)
+find_package(nil-service CONFIG REQUIRED)
+find_package(nil-xit CONFIG REQUIRED)
+find_package(nil-xit-test CONFIG REQUIRED COMPONENTS gtest)
+
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE nil::xalt)
+target_link_libraries(${PROJECT_NAME} PRIVATE nil::sm-viz)
+target_link_libraries(${PROJECT_NAME} PRIVATE nil::clix)
+target_link_libraries(${PROJECT_NAME} PRIVATE nil::gate)
+target_link_libraries(${PROJECT_NAME} PRIVATE nil::service)
+target_link_libraries(${PROJECT_NAME} PRIVATE nil::xit)
+target_link_libraries(${PROJECT_NAME} PRIVATE nil::xit-gtest)
